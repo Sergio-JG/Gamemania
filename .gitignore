@@ -1,0 +1,81 @@
+# ===========================
+# Java backend (Maven or Gradle)
+# ===========================
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Gradle files and folders
+.gradle/
+build/
+bin/
+
+# Maven build output
+target/
+
+# Maven wrapper files (mantenerlos en repo normalmente, pero si quieres ignorar, descomenta)
+// mvnw
+// mvnw.cmd
+
+# Maven config folder (normalmente versionar)
+/.mvn/
+
+# Eclipse, IntelliJ, NetBeans project files
+*.classpath
+*.project
+*.settings/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Others
+*.jar
+*.war
+*.ear
+
+# Dependency directories (if any)
+/libs/
+
+# ===========================
+# React frontend (Node.js)
+# ===========================
+
+# Dependency directory
+/node_modules/
+
+# Build output
+/build/
+/dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor directories and files
+.vscode/
+
+# React specific static assets folder (normalmente versionar)
+/public/
+
+# ===========================
+# General OS files
+# ===========================
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
