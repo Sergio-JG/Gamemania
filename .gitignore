@@ -4,6 +4,7 @@ Thumbs.db
 .env
 .env.*
 
+
 # IDE / Editor files
 .vscode/
 
@@ -13,15 +14,12 @@ desktop.ini
 
 # ====================
 # FRONTEND (React - /frontend)
+
 /frontend/node_modules/
-/frontend/build/
 /frontend/dist/
-/frontend/.next/  # si por si acaso usas NextJS o similares
-/frontend/.cache/
+/frontend/.vite/  # Vite's internal cache folder
 /frontend/coverage/
-/frontend/public/static/
-/frontend/public/assets/
-/frontend/public/uploads/  # si subes ficheros locales temporales
+/frontend/public/uploads/  # if dynamically generated
 
 # Log files frontend
 /frontend/logs
@@ -30,6 +28,7 @@ desktop.ini
 # ====================
 # BACKEND (Java Spring - /backend)
 
+/backend/.factorypath
 /backend/target/         # Maven output
 /backend/build/          # Gradle output
 /backend/.gradle/
