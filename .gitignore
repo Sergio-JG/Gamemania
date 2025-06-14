@@ -1,81 +1,60 @@
-# ===========================
-# Java backend (Maven or Gradle)
-# ===========================
-
-# Compiled class files
-*.class
-
-# Log files
-*.log
-
-# Gradle files and folders
-.gradle/
-build/
-bin/
-
-# Maven build output
-target/
-
-# Maven wrapper files (mantenerlos en repo normalmente, pero si quieres ignorar, descomenta)
-// mvnw
-// mvnw.cmd
-
-# Maven config folder (normalmente versionar)
-/.mvn/
-
-# Eclipse, IntelliJ, NetBeans project files
-*.classpath
-*.project
-*.settings/
-.idea/
-*.iml
-*.ipr
-*.iws
-
-# Others
-*.jar
-*.war
-*.ear
-
-# Dependency directories (if any)
-/libs/
-
-# ===========================
-# React frontend (Node.js)
-# ===========================
-
-# Dependency directory
-/node_modules/
-
-# Build output
-/build/
-/dist/
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Environment variables
+# Global files
+.DS_Store
+Thumbs.db
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
 
-# Editor directories and files
+# IDE / Editor files
 .vscode/
 
-# React specific static assets folder (normalmente versionar)
-/public/
-
-# ===========================
-# General OS files
-# ===========================
-
-# macOS
-.DS_Store
-
-# Windows
-Thumbs.db
+# OS
 ehthumbs.db
+desktop.ini
+
+# ====================
+# FRONTEND (React - /frontend)
+/frontend/node_modules/
+/frontend/build/
+/frontend/dist/
+/frontend/.next/  # si por si acaso usas NextJS o similares
+/frontend/.cache/
+/frontend/coverage/
+/frontend/public/static/
+/frontend/public/assets/
+/frontend/public/uploads/  # si subes ficheros locales temporales
+
+# Log files frontend
+/frontend/logs
+/frontend/*.log
+
+# ====================
+# BACKEND (Java Spring - /backend)
+
+/backend/target/         # Maven output
+/backend/build/          # Gradle output
+/backend/.gradle/
+/backend/.mvn/
+/backend/logs/
+/backend/coverage/
+/backend/out/
+
+/backend/*.iml
+/backend/*.ipr
+/backend/*.iws
+
+/backend/.classpath
+/backend/.project
+/backend/.settings/
+
+# Log files backend
+/backend/*.log
+
+# Lombok generated files (opcional si usas lombok)
+backend/lombok.config
+
+# Spring boot devtools restart directory
+/backend/.restart
+
+# ====================
+# Global test coverage (por si hay cobertura centralizada)
+/coverage/
