@@ -1,14 +1,12 @@
 services:
   - type: web
     name: gamemania-backend
-    plan: free
     rootDir: backend
     runtime: docker
 
   - type: web
     name: gamemania-frontend
-    plan: free
-    runtime: static
     rootDir: frontend
+    runtime: static
     buildCommand: npm install && npm run build
     staticPublishPath: dist
