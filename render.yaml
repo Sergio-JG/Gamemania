@@ -3,18 +3,18 @@ services:
     name: gamemania-backend
     env: docker
     dockerfilePath: backend/Dockerfile
-    envVars:
+  - envVars:
       - key: SPRING_DATASOURCE_URL
         fromDatabase:
           name: gamemania-db
           property: connectionString
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
-          name: gamemania-admin
+          name: gamemania-db
           property: user
       - key: SPRING_DATASOURCE_PASSWORD
         fromDatabase:
-          name: gamemania-admin
+          name: gamemania-db
           property: password
     buildCommand: mvn clean package -DskipTests
     region: frankfurt
