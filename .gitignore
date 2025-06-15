@@ -32,7 +32,6 @@ desktop.ini
 /backend/target/         # Maven output
 /backend/build/          # Gradle output
 /backend/.gradle/
-/backend/.mvn/
 /backend/logs/
 /backend/coverage/
 /backend/out/
