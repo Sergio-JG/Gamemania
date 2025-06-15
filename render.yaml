@@ -1,7 +1,6 @@
 services:
   - type: web
     name: gamemania-backend
-    runtime: java
     plan: free
     rootDir: backend
     buildCommand: ./mvnw clean install
