@@ -3,16 +3,12 @@ services:
     name: gamemania-backend
     plan: free
     rootDir: backend
-    buildCommand: ./mvnw clean install
-    startCommand: ./mvnw spring-boot:run
-    envVars:
-      - key: SPRING_PROFILES_ACTIVE
-        value: production
+    runtime: docker
 
   - type: web
     name: gamemania-frontend
-    runtime: static
     plan: free
+    runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
