@@ -3,7 +3,7 @@ services:
     name: gamemania-backend
     env: docker
     dockerfilePath: backend/Dockerfile
-  - envVars:
+    envVars:
       - key: SPRING_DATASOURCE_URL
         fromDatabase:
           name: gamemania-db
