@@ -4,7 +4,6 @@ Thumbs.db
 .env
 .env.*
 
-
 # IDE / Editor files
 .vscode/
 
@@ -48,12 +47,12 @@ desktop.ini
 # Log files backend
 /backend/*.log
 
-# Lombok generated files (opcional si usas lombok)
+# Lombok generated files
 backend/lombok.config
 
 # Spring boot devtools restart directory
 /backend/.restart
 
 # ====================
-# Global test coverage (por si hay cobertura centralizada)
+# Global test coverage
 /coverage/
