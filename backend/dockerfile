@@ -1,15 +1,14 @@
-# Build and run a Java application using Maven and Eclipse Temurin
-
 # Build stage
 FROM maven:3.9.0-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-COPY . .
+COPY pom.xml .
+COPY src ./src
 
 RUN mvn clean package -DskipTests
 
-# Execution stage
+# Runtime stage
 FROM eclipse-temurin:17-jre
 
 WORKDIR /app
@@ -17,4 +16,3 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
-
