@@ -2,10 +2,10 @@ services:
   - type: web
     name: gamemania-backend
     env: docker
-    dockerfilePath: backend/dockerfile
+    dockerfilePath: backend/Dockerfile
     buildFilter:
       paths:
-        - backend/**/*
+        - backend/**
     envVars:
       - key: SPRING_DATASOURCE_URL
         fromDatabase:
