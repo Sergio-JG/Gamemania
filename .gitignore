@@ -28,8 +28,8 @@ desktop.ini
 # BACKEND (Java Spring - /backend)
 
 /backend/.factorypath
-/backend/target/         # Maven output
-/backend/build/          # Gradle output
+/backend/target/     
+/backend/build/          
 /backend/.gradle/
 /backend/.mvn/
 /backend/logs/
