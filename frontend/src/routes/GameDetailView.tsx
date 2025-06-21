@@ -65,34 +65,70 @@ const GameDetail = () => {
       <main style={{ background: 'rgb(41, 41, 41)' }}>
         <Container sx={{ paddingY: 10 }}>
 
-          <Typography fontFamily="Roboto" variant="h2" color={'white'} gutterBottom>{game?.title}</Typography>
+          <Typography fontFamily="Roboto" variant="h2" color={'white'} gutterBottom>
+            {game?.title}
+          </Typography>
 
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <img src={import.meta.env.VITE_GAME_IMAGES_URL + game?.image} alt="Carousel Image" width='100%' style={{ border: 'solid 0.5px gray', borderRadius: 25 }} />
+          <Grid container spacing={2} alignItems="stretch">
+            <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
+              <img
+                src={import.meta.env.VITE_GAME_IMAGES_URL + game?.image}
+                alt="Carousel Image"
+                style={{
+                  aspectRatio: '16/9',
+                  objectFit: 'cover',
+                  border: 'solid 0.5px gray',
+                  borderRadius: 25,
+                  width: '100%',
+                  height: '100%',
+                  minHeight: 0,
+                  flex: 1,
+                  display: 'block'
+                }}
+              />
             </Grid>
-            <Grid item xs={6}>
-              <List sx={{ border: 'solid 0.5px gray', padding: 5, borderRadius: 6 }}>
-                <ListItem> <Typography color={'white'}> Desarrollador:	Nintendo </Typography></ListItem>
-                <ListItem> <Typography color={'white'}> Distribuidor:	Nintendo </Typography></ListItem>
-                <ListItem> <Typography color={'white'}> Fecha de lanzamiento:	3 marzo 2017 </Typography></ListItem>
-                <ListItem> <Typography color={'white'}> Género: </Typography>	{game?.genres.map((genre: Genre) => {
-                  const genreColor = genreColors[genre.name as GenreType];
-                  return (
-                    <span style={{ paddingInlineStart: 10 }}>
-                      <Chip sx={{ bgcolor: genreColor, color: 'white' }} key={genre.genreId} label={genre.name} style={{ marginRight: '5px' }} />
-                    </span>
-                  );
-                })}
+            <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
+              <List
+                sx={{
+                  border: 'solid 0.5px gray',
+                  padding: 5,
+                  borderRadius: 6,
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center'
+                }}
+              >
+                <ListItem>
+                  <Typography color={'white'}> Desarrollador: Nintendo </Typography>
                 </ListItem>
-                <ListItem> <Typography color={'white'}> Plataformas: </Typography>{game?.platforms.map((platform: Platform) => {
-                  const platformColor = platformColors[platform.name as PlatformType];
-                  return (
-                    <span key={platform.platformId} style={{ paddingInlineStart: 10 }}>
-                      <Chip sx={{ bgcolor: platformColor, color: 'white' }} label={platform.name} style={{ marginRight: '5px' }} />
-                    </span>
-                  );
-                })}
+                <ListItem>
+                  <Typography color={'white'}> Distribuidor: Nintendo </Typography>
+                </ListItem>
+                <ListItem>
+                  <Typography color={'white'}> Fecha de lanzamiento: 3 marzo 2017 </Typography>
+                </ListItem>
+                <ListItem>
+                  <Typography color={'white'}> Género: </Typography>
+                  {game?.genres.map((genre: Genre) => {
+                    const genreColor = genreColors[genre.name as GenreType];
+                    return (
+                      <span key={genre.genreId} style={{ paddingInlineStart: 10 }}>
+                        <Chip sx={{ bgcolor: genreColor, color: 'white' }} label={genre.name} style={{ marginRight: '5px' }} />
+                      </span>
+                    );
+                  })}
+                </ListItem>
+                <ListItem>
+                  <Typography color={'white'}> Plataformas: </Typography>
+                  {game?.platforms.map((platform: Platform) => {
+                    const platformColor = platformColors[platform.name as PlatformType];
+                    return (
+                      <span key={platform.platformId} style={{ paddingInlineStart: 10 }}>
+                        <Chip sx={{ bgcolor: platformColor, color: 'white' }} label={platform.name} style={{ marginRight: '5px' }} />
+                      </span>
+                    );
+                  })}
                 </ListItem>
               </List>
             </Grid>
@@ -103,32 +139,63 @@ const GameDetail = () => {
           <Divider />
 
           <Grid sx={{ padding: 2, marginY: 2 }}>
-            <Typography color={'white'} variant="h4" gutterBottom> Descripción </Typography>
-            <Typography color={'white'} variant="body1">{game?.description}{game?.description}{game?.description}{game?.description}{game?.description}{game?.description}{game?.description}{game?.description}{game?.description}{game?.description}{game?.description}{game?.description}{game?.description}{game?.description}{game?.description}{game?.description}{game?.description}</Typography>
+            <Typography color={'white'} variant="h4" gutterBottom>
+              Descripción
+            </Typography>
+            <Typography color={'white'} variant="body1">
+              {game?.description}
+            </Typography>
           </Grid>
 
           <Divider />
 
           <Grid sx={{ padding: 2, marginY: 2 }}>
-            <Typography color={'white'} variant="h4" gutterBottom> Reviews </Typography>
-            <Grid container>
+            <Typography color={'white'} variant="h4" gutterBottom>
+              Reviews
+            </Typography>
+            <Grid container spacing={2}>
               {game?.reviews?.length === 0 && (
-                <Typography color={'white'} variant="body1">No hay reviews para este juego.</Typography>
+                <Typography padding={2} color={'white'} variant="body1">
+                  No hay reviews para este juego.
+                </Typography>
               )}
-              {game?.reviews?.map((review: Review) => (
-                <Grid item xs={4} sx={{ border: 'solid 0.5px gray', borderRadius: 5, padding: 2, marginY: 2, marginInlineEnd: 2, background: 'rgb(41, 41, 31)' }}>
+              {game?.reviews?.map((review: Review, idx: number) => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  key={idx}
+                  sx={{
+                    border: 'solid 0.5px gray',
+                    borderRadius: 5,
+                    padding: 2,
+                    marginLeft: 2,
+                    marginTop: 2,
+                    background: 'rgb(41, 41, 31)',
+                  }}
+                >
                   <Grid container sx={{ paddingY: 1, alignItems: 'center' }}>
-                    <img width='40px' style={{ borderRadius: 25 }} src={import.meta.env.VITE_USER_IMAGES_URL + 'default.jpg'}></img>
-                    <Typography color='white' sx={{ paddingX: 2, paddingInlineEnd: 7 }} variant="body1">{review.username}</Typography>
+                    <img
+                      width="40px"
+                      style={{ borderRadius: 25 }}
+                      src={import.meta.env.VITE_USER_IMAGES_URL + 'default.jpg'}
+                      alt="User"
+                    />
+                    <Typography color="white" sx={{ paddingX: 2, paddingInlineEnd: 2 }} variant="body1">
+                      {review.username}
+                    </Typography>
                     <StarRating score={review.score} />
                   </Grid>
-                  <Typography color='white' sx={{ paddingY: 2 }} variant="body1">{review.comment}</Typography>
+                  <Typography color="white" sx={{ paddingY: 2 }} variant="body1">
+                    {review.comment}
+                  </Typography>
                 </Grid>
               ))}
             </Grid>
           </Grid>
         </Container>
-      </main >
+      </main>
       <Footer />
     </>
   );

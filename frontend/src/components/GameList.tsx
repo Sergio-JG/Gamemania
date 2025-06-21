@@ -35,7 +35,6 @@ const GameList = () => {
   const lastReleasedGames = useMemo(() => [...games].sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime()), [games]);
   const discountedGames = useMemo(() => games.filter(game => game.discount != 0), [games]);
 
-  // Card component for reuse
   const GameCard = ({
     game,
     showDiscount = false,
@@ -96,7 +95,12 @@ const GameList = () => {
     <>
       {/* LAST RELEASE */}
       <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 pt-8">
-        <Typography variant="h4" color="white" fontFamily={'Roboto'} className="mb-5 !text-2xl sm:!text-3xl">
+        <Typography
+          variant="h4"
+          color="white"
+          fontFamily={'Roboto Slab, Roboto, sans-serif'}
+          className="mb-7 !text-2xl sm:!text-4xl tracking-tight font-extrabold text-start"
+        >
           Últimos lanzamientos
         </Typography>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -108,8 +112,8 @@ const GameList = () => {
 
       {/* FAKE ADD */}
       <div className="w-full flex justify-center my-8">
-        <div className="bg-[#222] text-white px-6 py-6 rounded-xl min-w-[320px] text-center font-roboto text-lg sm:text-xl">
-          <span role="img" aria-label="ad">
+        <div className="bg-[#222] text-white px-6 py-8 rounded-xl w-full max-w-5xl text-center font-roboto text-lg sm:text-2xl font-semibold shadow-lg">
+          <span role="img" aria-label="ad" className="text-2xl">
             📢
           </span>{' '}
           ¡Publicidad! Compra tus accesorios gamer aquí.
@@ -118,7 +122,12 @@ const GameList = () => {
 
       {/* POPULAR */}
       <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 py-8">
-        <Typography variant="h4" color="white" fontFamily={'Roboto'} className="mb-5 !text-2xl sm:!text-3xl">
+        <Typography
+          variant="h4"
+          color="white"
+          fontFamily={'Roboto Slab, Roboto, sans-serif'}
+          className="mb-7 !text-2xl sm:!text-4xl tracking-tight font-extrabold text-center"
+        >
           Más vendidos
         </Typography>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -130,8 +139,8 @@ const GameList = () => {
 
       {/* FAKE ADD */}
       <div className="w-full flex justify-center my-8">
-        <div className="bg-[#222] text-white px-6 py-6 rounded-xl min-w-[320px] text-center font-roboto text-lg sm:text-xl">
-          <span role="img" aria-label="ad">
+        <div className="bg-[#222] text-white px-6 py-8 rounded-xl w-full max-w-5xl text-center font-roboto text-lg sm:text-2xl font-semibold shadow-lg">
+          <span role="img" aria-label="ad" className="text-2xl">
             🎮
           </span>{' '}
           ¡Publicidad! Descubre los mejores teclados mecánicos.
@@ -140,7 +149,12 @@ const GameList = () => {
 
       {/* DISCOUNTED */}
       <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 pb-8">
-        <Typography variant="h4" color="white" fontFamily={'Roboto'} className="mb-5 !text-2xl sm:!text-3xl">
+        <Typography
+          variant="h4"
+          color="white"
+          fontFamily={'Roboto Slab, Roboto, sans-serif'}
+          className="mb-7 !text-2xl sm:!text-4xl tracking-tight font-extrabold text-center"
+        >
           Juegos en oferta
         </Typography>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

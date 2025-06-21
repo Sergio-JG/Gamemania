@@ -1,18 +1,20 @@
 import { useEffect, useState, useRef } from 'react';
-import { Grid, InputBase, IconButton, Stack, ListItem, Paper } from '@mui/material';
+import { Grid, InputBase, IconButton, Stack, ListItem, Paper, useMediaQuery } from '@mui/material';
 import Search from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
 import GameInterface from '../interfaces/GameInterface';
-
+import { useTheme } from '@mui/material/styles';
 
 const SearchComponent: React.FC = () => {
-
     const [query, setQuery] = useState<string>('');
     const [results, setResults] = useState<GameInterface[]>([]);
     const [games, setGames] = useState<GameInterface[]>([]);
     const [showResults, setShowResults] = useState(false);
 
     const searchRef = useRef<HTMLDivElement>(null);
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         const searchQuery = event.target.value;
@@ -54,9 +56,28 @@ const SearchComponent: React.FC = () => {
     }, []);
 
     return (
-        <Grid item xs={4} style={{ position: 'sticky' }}>
+        <Grid
+            item
+            xs={12}
+            sm={10}
+            md={8}
+            lg={12}
+            style={{
+                position: 'sticky',
+                zIndex: 10,
+                margin: isMobile ? '8px 0' : '0',
+                width: '100%',
+            }}
+            ref={searchRef}
+        >
             <InputBase
-                sx={{ padding: '10px', fontSize: '1rem', border: '1px solid yellow', borderRadius: '4px', background: 'white' }}
+                sx={{
+                    padding: isMobile ? '8px' : '10px',
+                    fontSize: isMobile ? '0.95rem' : '1rem',
+                    border: '1px solid yellow',
+                    borderRadius: '4px',
+                    background: 'white',
+                }}
                 placeholder="Search games..."
                 style={{ width: '100%' }}
                 onChange={handleSearch}
@@ -69,12 +90,24 @@ const SearchComponent: React.FC = () => {
             />
 
             {showResults && (
-                <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, width: '100%' }}>
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        right: 0,
+                        width: '100%',
+                        maxHeight: isMobile ? 200 : 300,
+                        overflowY: 'auto',
+                    }}
+                >
                     <Paper style={{ animation: 'fadeIn 1s', borderRadius: '4px', borderTop: 'none' }}>
-                        <Stack spacing={2}>
+                        <Stack spacing={1}>
                             {results.map((game: GameInterface) => (
-                                <ListItem key={game.gameId}>
-                                    <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/game/${game.gameId}`}>{game.title}</Link>
+                                <ListItem key={game.gameId} sx={{ padding: isMobile ? '6px 8px' : '8px 16px' }}>
+                                    <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/game/${game.gameId}`}>
+                                        {game.title}
+                                    </Link>
                                 </ListItem>
                             ))}
                         </Stack>
