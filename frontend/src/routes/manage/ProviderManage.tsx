@@ -1,9 +1,9 @@
 import { Account, Provider } from '../../interfaces/GameInterface'
-import HeaderAdmin from '../../components/HeaderAdmin';
+import HeaderAdmin from '../../components/header/HeaderAdmin';
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button, Pagination, Grid, Typography, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { useState, useEffect } from 'react';
-import CreateProviderForm from '../../components/CreateProviderForm';
-import FooterAdmin from '../../components/FooterAdmin';
+import CreateProviderForm from '../../components/admin/provider/CreateProviderForm';
+import FooterAdmin from '../../components/footer/FooterAdmin';
 import axios from 'axios';
 
 const ProviderManage: React.FC = () => {
@@ -36,7 +36,7 @@ const ProviderManage: React.FC = () => {
         }
     };
 
-    const validateProvidersData = (data: any) => {
+    const validateProvidersData = (data: unknown) => {
         console.log(data)
         return true;
     };

@@ -1,12 +1,12 @@
 
-import RoleDialog from '../../components/RoleDialog';
+import RoleDialog from '../../components/dialog/RoleDialog';
 import SocialDialog from '../../components/dialog/SocialDialog';
 import axios from 'axios';
 import { User } from '../../interfaces/GameInterface'
-import HeaderAdmin from '../../components/HeaderAdmin';
+import HeaderAdmin from '../../components/header/HeaderAdmin';
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Grid, Pagination, Typography } from '@mui/material';
 import { useState, useReducer, useEffect } from 'react';
-import FooterAdmin from '../../components/FooterAdmin';
+import FooterAdmin from '../../components/footer/FooterAdmin';
 import AddressDialog from '../../components/dialog/AddressDialog';
 import CreditCardDialog from '../../components/dialog/CreditCardDialog';
 

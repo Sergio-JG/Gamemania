@@ -2,8 +2,8 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Grid, Typography, Divider } from '@mui/material';
 import { CreditCard, User, Sale, Social, Address } from '../interfaces/GameInterface';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from '../components/header/Header';
+import Footer from '../components/footer/Footer';
 
 const Profile: React.FC = () => {
 

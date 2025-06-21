@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle, DialogContent, Typography } from "@mui/material"
-import { User } from "../interfaces/GameInterface"
+import { User } from "../../interfaces/GameInterface"
 
 type RoleDialogProps = {
     open: boolean;

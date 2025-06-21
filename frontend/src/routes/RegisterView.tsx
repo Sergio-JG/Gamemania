@@ -52,7 +52,6 @@ const RegisterComponent: React.FC = () => {
     } else {
       setErrors((prevErrors) => ({ ...prevErrors, passwordError: '' }));
     }
-    // ...
 
     try {
       const response = await axios.get(`http://localhost:8080/userByEmail/${formData.email}`);
@@ -64,6 +63,13 @@ const RegisterComponent: React.FC = () => {
         isValid = true;
       }
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        setErrors((prevErrors) => ({ ...prevErrors, emailError: '' }));
+      } else {
+        console.error('Error checking email:', error);
+        setErrors((prevErrors) => ({ ...prevErrors, generalError: 'Error al verificar el email' }));
+        isValid = false;
+      }
 
     }
 

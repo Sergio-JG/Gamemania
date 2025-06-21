@@ -1,8 +1,8 @@
 import { Chip, Container, Divider, Grid, List, ListItem, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
+import Footer from '../components/footer/Footer';
+import Header from '../components/header/Header';
 import { Game, Genre, Platform, Review } from '../interfaces/GameInterface';
 import axios from 'axios';
 import StarRating from '../components/StarRating';
@@ -112,20 +112,21 @@ const GameDetail = () => {
           <Grid sx={{ padding: 2, marginY: 2 }}>
             <Typography color={'white'} variant="h4" gutterBottom> Reviews </Typography>
             <Grid container>
+              {game?.reviews?.length === 0 && (
+                <Typography color={'white'} variant="body1">No hay reviews para este juego.</Typography>
+              )}
               {game?.reviews?.map((review: Review) => (
                 <Grid item xs={4} sx={{ border: 'solid 0.5px gray', borderRadius: 5, padding: 2, marginY: 2, marginInlineEnd: 2, background: 'rgb(41, 41, 31)' }}>
                   <Grid container sx={{ paddingY: 1, alignItems: 'center' }}>
                     <img width='40px' style={{ borderRadius: 25 }} src={import.meta.env.VITE_USER_IMAGES_URL + 'default.jpg'}></img>
-                    <Typography color='white' sx={{ paddingX: 2, paddingInlineEnd: 10 }} variant="body1">{review.username}</Typography>
+                    <Typography color='white' sx={{ paddingX: 2, paddingInlineEnd: 7 }} variant="body1">{review.username}</Typography>
                     <StarRating score={review.score} />
                   </Grid>
                   <Typography color='white' sx={{ paddingY: 2 }} variant="body1">{review.comment}</Typography>
                 </Grid>
               ))}
             </Grid>
-
           </Grid>
-
         </Container>
       </main >
       <Footer />

@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { Purchase, PurchaseDetail } from '../../interfaces/GameInterface'
-import HeaderAdmin from '../../components/HeaderAdmin';
+import HeaderAdmin from '../../components/header/HeaderAdmin';
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Grid, Pagination, Typography, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { useState, useEffect } from 'react';
-import FooterAdmin from '../../components/FooterAdmin';
+import FooterAdmin from '../../components/footer/FooterAdmin';
 
 const PurchaseManage: React.FC = () => {
 

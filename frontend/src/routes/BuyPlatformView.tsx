@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { Avatar, Box, Button, Divider, Grid, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from '../components/header/Header';
+import Footer from '../components/footer/Footer';
 import { CartContext } from '../components/CartContext';
 import CartItem, { User } from '../interfaces/GameInterface';
 import { ArrowRight } from '@mui/icons-material';

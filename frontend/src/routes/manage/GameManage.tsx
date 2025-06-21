@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Rating, Grid, Pagination, Button, Typography, Dialog, DialogActions, DialogContent, DialogTitle, TextField, MenuItem } from '@mui/material';
 import { Game, Genre, Platform, Provider, Review } from '../../interfaces/GameInterface';
-import HeaderAdmin from '../../components/HeaderAdmin';
-import FooterAdmin from '../../components/FooterAdmin';
-import CreateGameForm from '../../components/CreateGameForm';
-import DescriptionDialog from '../../components/DescriptionDialog';
+import HeaderAdmin from '../../components/header/HeaderAdmin';
+import FooterAdmin from '../../components/footer/FooterAdmin';
+import CreateGameForm from '../../components/admin/game/CreateGameForm';
+import DescriptionDialog from '../../components/dialog/DescriptionDialog';
 import axios from 'axios';
 
 const API_URL = 'http://localhost:8080/game';
@@ -169,7 +169,7 @@ const GameManage: React.FC = () => {
 
     {/* COMPRAR */ }
 
-    function handleProviderChange(event: any): void {
+    function handleProviderChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const { value } = event.target;
         const selectedProvider = providers.find((provider: Provider) => provider.providerId === value);
         setSelectedProvider(selectedProvider || null);

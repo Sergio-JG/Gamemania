@@ -1,12 +1,11 @@
-import { AccountCircle, Face2, ShoppingCart } from '@mui/icons-material/';
-import { AppBar, Badge, IconButton, Menu, MenuItem, Toolbar } from '@mui/material/';
-import Grid from '@mui/material/Grid';
+import { AccountCircle, Face2, ShoppingCart } from '@mui/icons-material';
+import { AppBar, Badge, IconButton, Menu, MenuItem, Toolbar, Grid } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../images/logo.png';
-import { CartContext } from '../components/CartContext';
+import logo from '../../images/logo.png';
+import { CartContext } from '../CartContext';
 import { useContext, useEffect, useState } from 'react';
 import React from 'react';
-import SearchComponent from './SearchComponent';
+import SearchComponent from '../SearchComponent';
 
 const HeaderComponent = () => {
 

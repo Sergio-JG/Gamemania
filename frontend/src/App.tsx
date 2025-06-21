@@ -6,11 +6,11 @@ import theme from './styles/themes';
 
 import GameDetailView from './routes/GameDetailView';
 
-import Home from './routes/Home';
+import Home from './routes/HomeView';
 import Login from './routes/LoginView';
 import RegisterView from './routes/RegisterView';
 import Profile from './routes/ProfileView';
-import BuyPlatform from './routes/BuyPlatform';
+import BuyPlatform from './routes/BuyPlatformView';
 
 import UserManage from './routes/manage/UserManage';
 import GameManage from './routes/manage/GameManage';
