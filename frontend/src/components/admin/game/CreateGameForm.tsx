@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Button, TextField, Modal, Typography, Grid, MenuItem, } from '@mui/material';
-import { Game, Genre, Platform } from '../interfaces/GameInterface';
+import { Game, Genre, Platform } from '../../../interfaces/GameInterface';
 import axios from 'axios';
 
 type OpenGameFormProps = {

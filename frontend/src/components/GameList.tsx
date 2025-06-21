@@ -1,15 +1,12 @@
 import CardMedia from '@mui/material/CardMedia';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Game } from '../interfaces/GameInterface';
-
 import { Chip } from '@mui/material';
 import axios from 'axios';
 
 const GameList = () => {
-
   const [games, setGames] = useState<Game[]>([]);
 
   const fetchGames = async () => {
@@ -38,132 +35,122 @@ const GameList = () => {
   const lastReleasedGames = useMemo(() => [...games].sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime()), [games]);
   const discountedGames = useMemo(() => games.filter(game => game.discount != 0), [games]);
 
+  // Card component for reuse
+  const GameCard = ({
+    game,
+    showDiscount = false,
+  }: {
+    game: Game;
+    showDiscount?: boolean;
+  }) => (
+    <div className="relative flex flex-col bg-[#18181b] rounded-2xl shadow-md overflow-hidden h-full">
+      {showDiscount && (
+        <Chip
+          label={`${game.discount}%`}
+          size="medium"
+          color="primary"
+          variant="filled"
+          style={{
+            fontSize: 20,
+            position: 'absolute',
+            top: 12,
+            right: 12,
+            color: 'black',
+            zIndex: 10,
+          }}
+        />
+      )}
+      <Link to={`/game/${game.gameId}`}>
+        <CardMedia
+          style={{ borderRadius: 20 }}
+          component="img"
+          alt={game.title}
+          height="200px"
+          image={import.meta.env.VITE_GAME_IMAGES_URL + game.image}
+          className="w-full h-48 object-cover"
+        />
+      </Link>
+      <div className="flex flex-col flex-1 justify-between p-4">
+        <div className="flex justify-between items-center text-white">
+          <Typography fontFamily={'Roboto'} variant="h5" className="!text-lg !font-bold">
+            {truncateText(game.title, 30)}
+          </Typography>
+          <Typography fontFamily={'Roboto'} variant="h5" className="!text-lg !font-bold">
+            {showDiscount
+              ? `${(game.price - (game.price * ((game.discount ?? 0) / 100))).toFixed(2)}€`
+              : `${game.price}€`}
+          </Typography>
+        </div>
+        <div className="flex justify-between items-center pt-2">
+          {game.stock === 0 ? (
+            <Chip label="No disponible" color="error" variant="filled" />
+          ) : (
+            <Chip label="Disponible" color="info" variant="filled" />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <>
-      {/* LAST  RELEASE */}
-      <Grid item xs={12} sx={{ paddingX: 30, paddingTop: 5 }}>
-        <Typography variant="h4" color="white" fontFamily={'Roboto'} style={{ marginBottom: 20 }}> Últimos lanzamientos </Typography>
-        <Grid container spacing={12}>
+      {/* LAST RELEASE */}
+      <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 pt-8">
+        <Typography variant="h4" color="white" fontFamily={'Roboto'} className="mb-5 !text-2xl sm:!text-3xl">
+          Últimos lanzamientos
+        </Typography>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {lastReleasedGames.map((game, index) => (
-            <Grid key={index} item xs={12} sm={6} md={4}>
-              <div>
-                <Link to={`/game/${game.gameId}`}>
-                  <CardMedia
-                    style={{ borderRadius: 25 }}
-                    component="img"
-                    alt={game.title}
-                    height='200px'
-                    image={import.meta.env.VITE_GAME_IMAGES_URL + game.image}
-                  />
-                </Link>
-                <Grid sx={{ paddingTop: 2 }}>
-                  <Grid container justifyContent="space-between" alignItems="center" color={'white'}>
-                    <Typography fontFamily={'Roboto'} variant="h5">
-                      {truncateText(game.title, 30)}
-
-                    </Typography>
-                    <Typography fontFamily={'Roboto'} variant="h5">{`${game.price}€`}</Typography>
-                  </Grid>
-                </Grid>
-              </div>
-              {game.stock === 0 ? (
-                <Grid container justifyContent="space-between" alignItems="center" style={{ paddingTop: 10 }}>
-                  <Chip label="No disponible" color="error" variant="filled" />
-                </Grid>
-              ) : (
-                <Grid container justifyContent="space-between" alignItems="center" style={{ paddingTop: 10 }}>
-                  <Chip label="Disponible" color="info" variant="filled" />
-                </Grid>
-              )}
-            </Grid>
+            <GameCard key={index} game={game} />
           ))}
-        </Grid>
-      </Grid>
+        </div>
+      </div>
+
+      {/* FAKE ADD */}
+      <div className="w-full flex justify-center my-8">
+        <div className="bg-[#222] text-white px-6 py-6 rounded-xl min-w-[320px] text-center font-roboto text-lg sm:text-xl">
+          <span role="img" aria-label="ad">
+            📢
+          </span>{' '}
+          ¡Publicidad! Compra tus accesorios gamer aquí.
+        </div>
+      </div>
 
       {/* POPULAR */}
-      <Grid item xs={12} sx={{ paddingX: 30, paddingY: 10 }}>
-        <Typography variant="h4" color="white" fontFamily={'Roboto'} style={{ marginBottom: 20 }}> Más vendidos </Typography>
-        <Grid container spacing={12}>
+      <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 py-8">
+        <Typography variant="h4" color="white" fontFamily={'Roboto'} className="mb-5 !text-2xl sm:!text-3xl">
+          Más vendidos
+        </Typography>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {popularGames.map((game, index) => (
-            <Grid key={index} item xs={12} sm={6} md={4}>
-              <div>
-                <Link to={`/game/${game.gameId}`}>
-                  <CardMedia
-                    style={{ borderRadius: 25 }}
-                    component="img"
-                    alt={game.title}
-                    height='200px'
-                    image={import.meta.env.VITE_GAME_IMAGES_URL + game.image}
-                  />
-                </Link>
-                <Grid sx={{ paddingTop: 2 }}>
-                  <Grid container justifyContent="space-between" alignItems="center" color={'white'}>
-                    <Typography fontFamily={'Roboto'} variant="h5">
-                      {truncateText(game.title, 30)}
-                    </Typography>
-                    <Typography fontFamily={'Roboto'} variant="h5">{`${game.price}€`}</Typography>
-                  </Grid>
-                </Grid>
-              </div>
-              {game.stock === 0 ? (
-                <Grid container justifyContent="space-between" alignItems="center" style={{ paddingTop: 10 }}>
-                  <Chip label="No disponible" color="error" variant="filled" />
-                </Grid>
-              ) : (
-                <Grid container justifyContent="space-between" alignItems="center" style={{ paddingTop: 10 }}>
-                  <Chip label="Disponible" color="info" variant="filled" />
-                </Grid>
-              )}
-            </Grid>
+            <GameCard key={index} game={game} />
           ))}
-        </Grid>
-      </Grid>
+        </div>
+      </div>
+
+      {/* FAKE ADD */}
+      <div className="w-full flex justify-center my-8">
+        <div className="bg-[#222] text-white px-6 py-6 rounded-xl min-w-[320px] text-center font-roboto text-lg sm:text-xl">
+          <span role="img" aria-label="ad">
+            🎮
+          </span>{' '}
+          ¡Publicidad! Descubre los mejores teclados mecánicos.
+        </div>
+      </div>
 
       {/* DISCOUNTED */}
-      <Grid item xs={12} sx={{ paddingX: 30, paddingBottom: 10 }}>
-        <Typography variant="h4" color="white" fontFamily={'Roboto'} style={{ paddingBottom: 20 }}> Ultimos lanzamientos </Typography>
-        <Grid container spacing={12}>
+      <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 pb-8">
+        <Typography variant="h4" color="white" fontFamily={'Roboto'} className="mb-5 !text-2xl sm:!text-3xl">
+          Juegos en oferta
+        </Typography>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {discountedGames.map((game, index) => (
-            <Grid key={index} item xs={12} sm={6} md={4}>
-              <div>
-                <Chip label={`${game.discount}%`} size='medium' color='primary' variant='filled' style={{ fontSize: 20, position: 'absolute', marginInlineStart: 360, color: 'black' }} />
-                <Link to={`/game/${game.gameId}`}>
-                  <CardMedia
-                    style={{ borderRadius: 25 }}
-                    component="img"
-                    alt={game.title}
-                    height='200px'
-                    image={import.meta.env.VITE_GAME_IMAGES_URL + game.image}
-                  />
-                </Link>
-                <Grid sx={{ paddingTop: 2 }}>
-                  <Grid container justifyContent="space-between" alignItems="center" color={'white'}>
-                    <Typography fontFamily={'Roboto'} variant="h5">
-                      {truncateText(game.title, 30)}
-                    </Typography>
-                    <Typography fontFamily={'Roboto'} variant="h5">
-                      {`${(game.price - (game.price * ((game.discount ?? 0) / 100))).toFixed(2)}€`}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </div>
-              {game.stock === 0 ? (
-                <Grid container justifyContent="space-between" alignItems="center" style={{ paddingTop: 10 }}>
-                  <Chip label="No disponible" color="error" variant="filled" />
-                </Grid>
-              ) : (
-                <Grid container justifyContent="space-between" alignItems="center" style={{ paddingTop: 10 }}>
-                  <Chip label="Disponible" color="info" variant="filled" />
-                </Grid>
-              )}
-            </Grid>
+            <GameCard key={index} game={game} showDiscount />
           ))}
-        </Grid>
-      </Grid>
-
+        </div>
+      </div>
     </>
-
   );
-}
+};
 
 export default GameList;
