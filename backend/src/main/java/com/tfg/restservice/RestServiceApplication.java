@@ -18,16 +18,6 @@ public class RestServiceApplication {
 	public static void main(String[] args) {
 		createDatabase();
 		SpringApplication.run(RestServiceApplication.class, args);
-
-		SpringApplication app = new SpringApplication(RestServiceApplication.class);
-		ConfigurableApplicationContext context = app.run(args);
-
-		String[] beans = context.getBeanDefinitionNames();
-		for (String bean : beans) {
-			if (bean.toLowerCase().contains("repository") || bean.toLowerCase().contains("entity")) {
-				System.out.println(bean);
-			}
-		}
 	}
 
 	public static void createDatabase() {
