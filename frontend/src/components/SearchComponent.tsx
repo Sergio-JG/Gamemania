@@ -74,9 +74,11 @@ const SearchComponent: React.FC = () => {
                 sx={{
                     padding: isMobile ? '8px' : '10px',
                     fontSize: isMobile ? '0.95rem' : '1rem',
-                    border: '1px solid yellow',
+                    border: '1px solid #bdbdbd',
                     borderRadius: '4px',
-                    background: 'white',
+                    background: '#f5f5f5',
+                    color: '#333',
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
                 }}
                 placeholder="Search games..."
                 style={{ width: '100%' }}
@@ -101,11 +103,34 @@ const SearchComponent: React.FC = () => {
                         overflowY: 'auto',
                     }}
                 >
-                    <Paper style={{ animation: 'fadeIn 1s', borderRadius: '4px', borderTop: 'none' }}>
+                    <Paper
+                        style={{
+                            animation: 'fadeIn 1s',
+                            borderRadius: '4px',
+                            borderTop: 'none',
+                            background: '#eeeeee',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                        }}
+                    >
                         <Stack spacing={1}>
                             {results.map((game: GameInterface) => (
-                                <ListItem key={game.gameId} sx={{ padding: isMobile ? '6px 8px' : '8px 16px' }}>
-                                    <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/game/${game.gameId}`}>
+                                <ListItem
+                                    key={game.gameId}
+                                    sx={{
+                                        padding: isMobile ? '6px 8px' : '8px 16px',
+                                        '&:hover': {
+                                            background: '#e0e0e0',
+                                        },
+                                    }}
+                                >
+                                    <Link
+                                        style={{
+                                            textDecoration: 'none',
+                                            color: '#333',
+                                            fontWeight: 500,
+                                        }}
+                                        to={`/game/${game.gameId}`}
+                                    >
                                         {game.title}
                                     </Link>
                                 </ListItem>

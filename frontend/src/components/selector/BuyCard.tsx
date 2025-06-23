@@ -37,48 +37,77 @@ const BuyCard: React.FC<BuyCardProps> = ({ game }) => {
     }
 
     return (
-        <>
-            <Grid sx={{ border: 'solid 0.5px gray', borderRadius: 5, padding: 2, marginY: 2, background: 'rgb(41, 41, 31)' }}>
-                <Typography color='white' variant="h4" gutterBottom> Adquirir por: {game.price}€ </Typography>
-                <Grid container>
-                    <Grid item xs={2} container sx={{ justifyContent: 'start', alignContent: 'center' }}>
-                        <Typography color={'white'} variant="body1" gutterBottom>
-                            Plataformas disponibles:
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={2} container sx={{ justifyContent: 'center', alignContent: 'center' }}>
-                        <FormControl variant="standard">
-                            <Select
-                                sx={{ width: 150 }}
-                                id="platform-select"
-                                value={selectedPlatform.name}
-                                onChange={handleChange}
-                                label="Platform"
-                                fullWidth
-                            >
-                                {game.platforms.map((platform) => (
-                                    <MenuItem key={platform.platformId} value={platform.name}>
-                                        {platform.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={8} container sx={{ justifyContent: 'center', alignContent: 'center' }}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            fullWidth
-                            onClick={() => game && addToCart(gameToCartItem(game))}
-                            endIcon={<ShoppingBasket />}
-                        >
-                            Añadir a la cesta
-                        </Button>
-                    </Grid>
-                </Grid>
+        <Grid
+            container
+            spacing={2}
+            sx={{
+                border: 'solid 0.5px gray',
+                borderRadius: 3,
+                p: { xs: 2, md: 3 },
+                my: 2,
+                background: 'rgb(41, 41, 31)',
+                alignItems: 'center',
+                maxWidth: '100%',
+                mx: 'auto',
+            }}
+        >
+            <Grid item xs={12}>
+                <Typography color="white" variant="h5" fontWeight={600} gutterBottom>
+                    Adquirir por: <span style={{ color: '#ffd700' }}>{game.price}€</span>
+                </Typography>
             </Grid>
-
-        </>
+            {game.platforms.length > 0 ? (
+                <Grid item xs={12} sm={5}>
+                    <Typography color="white" variant="body1" gutterBottom>
+                        Plataformas disponibles:
+                    </Typography>
+                    <FormControl variant="standard" fullWidth sx={{ mt: 1 }}>
+                        <Select
+                            id="platform-select"
+                            value={selectedPlatform.name}
+                            onChange={handleChange}
+                            label="Platform"
+                            sx={{
+                                background: '#222',
+                                color: 'white',
+                                borderRadius: 1,
+                                '.MuiSvgIcon-root': { color: 'white' },
+                            }}
+                        >
+                            {game.platforms.map((platform) => (
+                                <MenuItem key={platform.platformId} value={platform.name}>
+                                    {platform.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+            ) : (
+                <Grid item xs={12} sm={5}>
+                    <Typography color="white" variant="body1" gutterBottom>
+                        No hay plataformas disponibles para este juego.
+                    </Typography>
+                </Grid>
+            )}
+            <Grid item xs={12} sm={7} display="flex" alignItems="center" justifyContent={{ xs: 'flex-start', sm: 'flex-end' }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                        minWidth: 180,
+                        fontWeight: 600,
+                        py: 1.2,
+                        fontSize: { xs: '1rem', md: '1.1rem' },
+                        boxShadow: 2,
+                    }}
+                    onClick={() => game && addToCart(gameToCartItem(game))}
+                    endIcon={<ShoppingBasket />}
+                    disabled={game.platforms.length === 0}
+                >
+                    Añadir a la cesta
+                </Button>
+            </Grid>
+        </Grid>
     );
 };
 

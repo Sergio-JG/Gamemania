@@ -95,14 +95,9 @@ const GameList = () => {
     <>
       {/* LAST RELEASE */}
       <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 pt-8 mb-12">
-        <Typography
-          variant="h4"
-          color="primary"
-          fontFamily={'Roboto Slab, Roboto, sans-serif'}
-          className="!mb-8 !text-2xl sm:!text-4xl tracking-tight font-extrabold text-start"
-        >
+        <div className="mb-8 text-2xl sm:text-4xl tracking-tight font-extrabold text-start text-white font-['Roboto_Slab','Roboto',sans-serif]">
           Últimos lanzamientos
-        </Typography>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {lastReleasedGames.map((game, index) => (
             <GameCard key={index} game={game} />
@@ -122,14 +117,9 @@ const GameList = () => {
 
       {/* POPULAR */}
       <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 py-8 mb-12">
-        <Typography
-          variant="h4"
-          color="primary"
-          fontFamily={'Roboto Slab, Roboto, sans-serif'}
-          className="mb-8 !text-2xl sm:!text-4xl tracking-tight font-extrabold text-start"
-        >
+        <div className="mb-8 text-2xl sm:text-4xl tracking-tight font-extrabold text-start text-white font-['Roboto_Slab','Roboto',sans-serif]">
           Más vendidos
-        </Typography>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {popularGames.map((game, index) => (
             <GameCard key={index} game={game} />
@@ -148,15 +138,10 @@ const GameList = () => {
       </div>
 
       {/* DISCOUNTED */}
-      <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 pb-8 mb-8">
-        <Typography
-          variant="h4"
-          color="primary"
-          fontFamily={'Roboto Slab, Roboto, sans-serif'}
-          className="mb-8 !text-2xl sm:!text-4xl tracking-tight font-extrabold text-start"
-        >
+      <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 pb-8">
+        <div className="mb-8 text-2xl sm:text-4xl tracking-tight font-extrabold text-start text-white font-['Roboto_Slab','Roboto',sans-serif]">
           Juegos en oferta
-        </Typography>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {discountedGames.map((game, index) => (
             <GameCard key={index} game={game} showDiscount />

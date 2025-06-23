@@ -1,15 +1,12 @@
 import axios from 'axios';
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
 import { Link, useNavigate } from 'react-router-dom';
-import { TextField, Typography, useTheme } from '@mui/material';
+import { TextField, Typography, useTheme, Button } from '@mui/material';
 
 import logo from '../images/logo.png';
 import ImagenLogin from '../images/loginimage.jpg';
 
 const RegisterComponent: React.FC = () => {
-
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -30,7 +27,6 @@ const RegisterComponent: React.FC = () => {
   });
 
   const validate = async () => {
-
     let isValid = true;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -70,7 +66,6 @@ const RegisterComponent: React.FC = () => {
         setErrors((prevErrors) => ({ ...prevErrors, generalError: 'Error al verificar el email' }));
         isValid = false;
       }
-
     }
 
     return isValid;
@@ -99,20 +94,21 @@ const RegisterComponent: React.FC = () => {
         console.error('Error:', error);
       }
     }
-
   };
 
   return (
-    <Grid container component="main" sx={{ height: '100vh' }}>
-      <Grid item xs={12} sm={6} md={5} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#1B1A17' }}>
-        <Grid container component="form" onSubmit={handleRegister} noValidate sx={{ padding: 20, justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-          <Link to={`/`}>
-            <img
-              src={logo}
-              alt="Logo"
-            />
+    <div className="flex flex-col md:flex-row min-h-screen">
+      {/* Left Side - Form */}
+      <div className="w-full md:w-1/2 flex flex-col justify-center items-center bg-[#1B1A17] py-8 px-4 md:px-12">
+        <form
+          onSubmit={handleRegister}
+          className="w-full max-w-md space-y-4"
+          noValidate
+        >
+          <Link to={`/`} className="flex justify-center mb-4">
+            <img src={logo} alt="Logo" className="h-16" />
           </Link>
-          <Grid item xs={12}>
+          <div>
             <Typography variant="body1" sx={{ color: theme.palette.primary.main }}> Email </Typography>
             <TextField
               variant='filled'
@@ -126,8 +122,11 @@ const RegisterComponent: React.FC = () => {
               value={formData.email}
               onChange={handleChange}
               sx={{ bgcolor: 'white' }}
+              InputProps={{ className: 'bg-white rounded' }}
             />
             {errors.emailError && <Typography variant="caption" color="error">{errors.emailError}</Typography>}
+          </div>
+          <div>
             <Typography variant="body1" sx={{ color: theme.palette.primary.main }}> Contraseña: </Typography>
             <TextField
               variant='filled'
@@ -141,8 +140,11 @@ const RegisterComponent: React.FC = () => {
               value={formData.password}
               onChange={handleChange}
               sx={{ bgcolor: 'white' }}
+              InputProps={{ className: 'bg-white rounded' }}
             />
             {errors.passwordError && <Typography variant="caption" color="error">{errors.passwordError}</Typography>}
+          </div>
+          <div>
             <Typography variant="body1" sx={{ color: theme.palette.primary.main }}> Nombre: </Typography>
             <TextField
               variant='filled'
@@ -155,8 +157,11 @@ const RegisterComponent: React.FC = () => {
               value={formData.firstName}
               onChange={handleChange}
               sx={{ bgcolor: 'white' }}
+              InputProps={{ className: 'bg-white rounded' }}
             />
             {errors.firstName && <Typography variant="caption" color="error">{errors.firstName}</Typography>}
+          </div>
+          <div>
             <Typography variant="body1" sx={{ color: theme.palette.primary.main }}> Apellido: </Typography>
             <TextField
               variant='filled'
@@ -169,29 +174,25 @@ const RegisterComponent: React.FC = () => {
               value={formData.lastName}
               onChange={handleChange}
               sx={{ bgcolor: 'white' }}
+              InputProps={{ className: 'bg-white rounded' }}
             />
             {errors.lastName && <Typography variant="caption" color="error">{errors.lastName}</Typography>}
-            <Button type="submit" variant="contained" fullWidth> Confirmar registro </Button>
-            {errors.generalError && <Typography variant="caption" color="error">{errors.generalError}</Typography>}
-            <Grid container sx={{ paddingTop: 2 }}>
-              <Grid item xs>
-                <Link to='/login' style={{ color: 'white' }}>
-                  {"Ya tengo una cuenta"}
-                </Link>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid item xs={12} sm={6} md={7}
-        sx={{
-          backgroundImage: `url(${ImagenLogin})`,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
+          </div>
+          <Button type="submit" variant="contained" fullWidth className="!mt-4"> Confirmar registro </Button>
+          {errors.generalError && <Typography variant="caption" color="error">{errors.generalError}</Typography>}
+          <div className="flex justify-end pt-2">
+            <Link to='/login' className="text-white underline">
+              {"Ya tengo una cuenta"}
+            </Link>
+          </div>
+        </form>
+      </div>
+      {/* Right Side - Image */}
+      <div
+        className="hidden md:block md:w-1/2 bg-cover bg-center"
+        style={{ backgroundImage: `url(${ImagenLogin})` }}
       />
-    </Grid>
+    </div>
   );
 };
 
