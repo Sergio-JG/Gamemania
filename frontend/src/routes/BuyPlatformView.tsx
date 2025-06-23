@@ -83,7 +83,7 @@ const BuyPlatform = () => {
     const handleConfirmSale = async () => {
 
         updateStocks(cart);
-        let saleData = generateSaleData(cart);
+        const saleData = generateSaleData(cart);
         try {
             const response = await axios.post('http://localhost:8080/sale', saleData, {
                 headers: {

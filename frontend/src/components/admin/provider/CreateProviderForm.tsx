@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from 'react';
 import { Modal, TextField, Button, Grid, Typography } from '@mui/material';
 import axios from 'axios';
-import { Provider } from '../interfaces/GameInterface'; // Adjust the path as needed
+import { Provider } from '../../../interfaces/GameInterface';
 
 type OpenProviderFormProps = {
     open: boolean;
