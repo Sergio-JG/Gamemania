@@ -94,12 +94,12 @@ const GameList = () => {
   return (
     <>
       {/* LAST RELEASE */}
-      <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 pt-8">
+      <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 pt-8 mb-12">
         <Typography
           variant="h4"
-          color="white"
+          color="primary"
           fontFamily={'Roboto Slab, Roboto, sans-serif'}
-          className="mb-7 !text-2xl sm:!text-4xl tracking-tight font-extrabold text-start"
+          className="!mb-8 !text-2xl sm:!text-4xl tracking-tight font-extrabold text-start"
         >
           Últimos lanzamientos
         </Typography>
@@ -121,12 +121,12 @@ const GameList = () => {
       </div>
 
       {/* POPULAR */}
-      <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 py-8">
+      <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 py-8 mb-12">
         <Typography
           variant="h4"
-          color="white"
+          color="primary"
           fontFamily={'Roboto Slab, Roboto, sans-serif'}
-          className="mb-7 !text-2xl sm:!text-4xl tracking-tight font-extrabold text-center"
+          className="mb-8 !text-2xl sm:!text-4xl tracking-tight font-extrabold text-start"
         >
           Más vendidos
         </Typography>
@@ -148,12 +148,12 @@ const GameList = () => {
       </div>
 
       {/* DISCOUNTED */}
-      <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 pb-8">
+      <div className="w-full px-2 sm:px-8 md:px-24 lg:px-32 pb-8 mb-8">
         <Typography
           variant="h4"
-          color="white"
+          color="primary"
           fontFamily={'Roboto Slab, Roboto, sans-serif'}
-          className="mb-7 !text-2xl sm:!text-4xl tracking-tight font-extrabold text-center"
+          className="mb-8 !text-2xl sm:!text-4xl tracking-tight font-extrabold text-start"
         >
           Juegos en oferta
         </Typography>
