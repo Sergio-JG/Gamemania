@@ -6,3 +6,4 @@ export default {
   },
   plugins: [],
 };
+// This configuration file is for Tailwind CSS, a utility-first CSS framework.
