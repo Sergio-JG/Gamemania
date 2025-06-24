@@ -20,9 +20,9 @@ public class MyConfig {
 		@Override
 		public void addCorsMappings(@NonNull CorsRegistry registry) {
 			registry.addMapping("/**")
-					.allowedOrigins("http://localhost:5173")
-					.allowedMethods("*")
-					.allowCredentials(true);
+                    .allowedOrigins("https://gamemania-frontend.onrender.com")
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                    .allowedHeaders("*");
 		}
 	}
 }
