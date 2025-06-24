@@ -16,39 +16,39 @@ import java.sql.Statement;
 public class RestServiceApplication {
 
 	public static void main(String[] args) {
-		createDatabase();
+		// createDatabase();
 		SpringApplication.run(RestServiceApplication.class, args);
 	}
 
-	public static void createDatabase() {
-		String url = "jdbc:postgresql://localhost:5432/postgres";
-		String username = "admin";
-		String password = "Admin";
-		String databaseName = "gamemania";
+	// public static void createDatabase() {
+	// 	String url = "jdbc:postgresql://localhost:5432/postgres";
+	// 	String username = "admin";
+	// 	String password = "Admin";
+	// 	String databaseName = "gamemania";
 
-		try (Connection conn = DriverManager.getConnection(url, username, password);
-				Statement stmt = conn.createStatement()) {
+	// 	try (Connection conn = DriverManager.getConnection(url, username, password);
+	// 			Statement stmt = conn.createStatement()) {
 
-			String checkDbSql = "SELECT 1 FROM pg_database WHERE datname = '" + databaseName + "';";
-			var rs = stmt.executeQuery(checkDbSql);
+	// 		String checkDbSql = "SELECT 1 FROM pg_database WHERE datname = '" + databaseName + "';";
+	// 		var rs = stmt.executeQuery(checkDbSql);
 
-			if (!rs.next()) {
-				String createDbSql = "CREATE DATABASE " + databaseName + " " +
-						"WITH OWNER = postgres " +
-						"ENCODING = 'UTF8' " +
-						"LC_COLLATE = 'Spanish_Spain.1252' " +
-						"LC_CTYPE = 'Spanish_Spain.1252' " +
-						"LOCALE_PROVIDER = 'libc' " +
-						"TABLESPACE = pg_default " +
-						"CONNECTION LIMIT = -1 " +
-						"IS_TEMPLATE = False;";
-				stmt.executeUpdate(createDbSql);
-				String createExtensionSql = "CREATE EXTENSION IF NOT EXISTS \"pgcrypto\";";
-				stmt.executeUpdate(createExtensionSql);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+	// 		if (!rs.next()) {
+	// 			String createDbSql = "CREATE DATABASE " + databaseName + " " +
+	// 					"WITH OWNER = postgres " +
+	// 					"ENCODING = 'UTF8' " +
+	// 					"LC_COLLATE = 'Spanish_Spain.1252' " +
+	// 					"LC_CTYPE = 'Spanish_Spain.1252' " +
+	// 					"LOCALE_PROVIDER = 'libc' " +
+	// 					"TABLESPACE = pg_default " +
+	// 					"CONNECTION LIMIT = -1 " +
+	// 					"IS_TEMPLATE = False;";
+	// 			stmt.executeUpdate(createDbSql);
+	// 			String createExtensionSql = "CREATE EXTENSION IF NOT EXISTS \"pgcrypto\";";
+	// 			stmt.executeUpdate(createExtensionSql);
+	// 		}
+	// 	} catch (SQLException e) {
+	// 		e.printStackTrace();
+	// 	}
+	// }
 
 }
