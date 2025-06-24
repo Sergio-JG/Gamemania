@@ -7,9 +7,9 @@ import CreateGameForm from '../../components/admin/game/CreateGameForm';
 import DescriptionDialog from '../../components/dialog/DescriptionDialog';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/game';
-const API_URL_PROVIDERS = 'http://localhost:8080/provider';
-const API_URL_PURCHASE = 'http://localhost:8080/purchase';
+const API_URL = 'https://gamemania-backend.onrender.com/game';
+const API_URL_PROVIDERS = 'https://gamemania-backend.onrender.com/provider';
+const API_URL_PURCHASE = 'https://gamemania-backend.onrender.com/purchase';
 
 const GameManage: React.FC = () => {
 

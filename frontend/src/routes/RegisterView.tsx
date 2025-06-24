@@ -80,7 +80,7 @@ const RegisterComponent: React.FC = () => {
     e.preventDefault();
     if (await validate()) {
       try {
-        const response = await fetch('http://localhost:8080/user/register', {
+        const response = await fetch('https://gamemania-backend.onrender.com/user/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

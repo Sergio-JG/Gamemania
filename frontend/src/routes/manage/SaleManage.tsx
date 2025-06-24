@@ -7,7 +7,7 @@ import FooterAdmin from '../../components/footer/FooterAdmin';
 
 const SaleManage: React.FC = () => {
 
-    const API_URL = 'http://localhost:8080/sale';
+    const API_URL = 'https://gamemania-backend.onrender.com/sale';
 
     const [sales, setSales] = useState<Sale[]>([]);
     const [page, setPage] = useState(1);

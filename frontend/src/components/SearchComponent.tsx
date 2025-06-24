@@ -36,7 +36,7 @@ const SearchComponent: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:8080/game');
+                const response = await fetch('https://gamemania-backend.onrender.com/game');
                 if (!response.ok) {
                     throw new Error('ERROR');
                 }

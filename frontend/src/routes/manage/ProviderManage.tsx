@@ -8,7 +8,7 @@ import axios from 'axios';
 
 const ProviderManage: React.FC = () => {
 
-    const API_URL = 'http://localhost:8080/provider';
+    const API_URL = 'https://gamemania-backend.onrender.com/provider';
 
     const [providers, setProviders] = useState<[]>([]);
     const [page, setPage] = useState(1);

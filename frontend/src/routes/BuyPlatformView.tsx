@@ -21,7 +21,7 @@ const BuyPlatform = () => {
         try {
             const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || '';
             console.log
-            const response = await axios.get(`http://localhost:8080/user/${userId}`);
+            const response = await axios.get(`https://gamemania-backend.onrender.com/user/${userId}`);
             if (response.status == 200) {
                 setUserData(response.data[0]);
                 console.log(userData)
@@ -52,7 +52,7 @@ const BuyPlatform = () => {
 
     const updateStocks = async (cart: CartItem[]) => {
 
-        const API_URL = 'http://localhost:8080/game';
+        const API_URL = 'https://gamemania-backend.onrender.com/game';
         console.log(cart);
 
         cart.forEach(async (cartItem: CartItem) => {

@@ -10,12 +10,12 @@ type OpenGameFormProps = {
 
 const CreateGameForm = ({ open, onClose }: OpenGameFormProps) => {
 
-    const API_URL = 'http://localhost:8080/game';
+    const API_URL = 'https://gamemania-backend.onrender.com/game';
+    const API_URL_GENRES = 'https://gamemania-backend.onrender.com/genre';
 
-    const API_URL_GENRES = 'http://localhost:8080/genre';
     const [genres, setGenres] = useState<Genre[]>([]);
 
-    const API_URL_PLATFORMS = 'http://localhost:8080/platform';
+    const API_URL_PLATFORMS = 'https://gamemania-backend.onrender.com/platform';
     const [platforms, setPlatforms] = useState<Platform[]>([]);
 
     // const [errors, setErrors] = React.useState({

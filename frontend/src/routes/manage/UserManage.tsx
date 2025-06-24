@@ -12,7 +12,7 @@ import CreditCardDialog from '../../components/dialog/CreditCardDialog';
 
 const UserManage: React.FC = () => {
 
-    const API_URL = 'http://localhost:8080/user';
+    const API_URL = 'https://gamemania-backend.onrender.com/user';
 
     type StateType = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

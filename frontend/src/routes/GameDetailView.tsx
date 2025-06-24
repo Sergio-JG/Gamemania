@@ -49,7 +49,7 @@ const GameDetail = () => {
   useEffect(() => {
     const fetchGameDetails = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/game/${id}`);
+        const response = await axios.get(`https://gamemania-backend.onrender.com/game/${id}`);
         setGame(response.data);
         console.log(response.data);
       } catch (error) {

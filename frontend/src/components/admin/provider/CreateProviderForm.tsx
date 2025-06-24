@@ -9,7 +9,7 @@ type OpenProviderFormProps = {
 };
 
 const CreateProviderForm = ({ open, onClose }: OpenProviderFormProps) => {
-    const API_URL = 'http://localhost:8080/provider';
+    const API_URL = 'https://gamemania-backend.onrender.com/provider';
 
     const [formData, setFormData] = useState<Provider>({
         name: '',

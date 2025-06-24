@@ -11,7 +11,7 @@ const GameList = () => {
 
   const fetchGames = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/game`);
+      const response = await axios.get(`https://gamemania-backend.onrender.com/game`);
       if (response.status === 200) {
         const result = response.data;
         setGames(result);
