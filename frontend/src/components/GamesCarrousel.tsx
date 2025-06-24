@@ -3,11 +3,11 @@ import { useState, useEffect, CSSProperties } from 'react';
 const Carousel = () => {
 
     const images = [
-        '../../public/images/games/Cyberpunk2077.jpg',
-        '../../public/images/games/Fortnite.jpg',
-        '../../public/images/games/AmongUs.jpg',
-        '../../public/images/games/TheLegendOfZeldaBreathOfTheWild.jpg',
-        '../../public/images/games/CallOfDutyWarzone.jpg',
+        '/images/games/Cyberpunk2077.jpg',
+        '/images/games/Fortnite.jpg',
+        '/images/games/AmongUs.jpg',
+        '/images/games/TheLegendOfZeldaBreathOfTheWild.jpg',
+        '/images/games/CallOfDutyWarzone.jpg',
     ];
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
