@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { Grid, InputBase, IconButton, Stack, ListItem, Paper, useMediaQuery } from '@mui/material';
-import Search from '@mui/icons-material/Search.js';
+import Search from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
 import GameInterface from '../interfaces/GameInterface';
 import { useTheme } from '@mui/material/styles';

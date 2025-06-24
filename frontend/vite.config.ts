@@ -7,7 +7,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       maxParallelFileOps: 20,
-      external: [/^@mui\/icons-material\/.*/],
+      external: [],
     },
   },
 });
