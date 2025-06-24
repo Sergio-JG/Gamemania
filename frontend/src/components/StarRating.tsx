@@ -1,6 +1,6 @@
-import Star from '@mui/icons-material/Star';
-import StarHalf from '@mui/icons-material/StarHalf';
-import StarBorder from '@mui/icons-material/StarBorder';
+import Star from '@mui/icons-material/Star.js';
+import StarHalf from '@mui/icons-material/StarHalf.js';
+import StarBorder from '@mui/icons-material/StarBorder.js';
 
 const StarRating = ({ score }: { score: number }) => {
 
