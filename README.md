@@ -36,8 +36,5 @@ Videojuego en detalle
 Login
 ![image](https://github.com/user-attachments/assets/74294c6e-83b9-4c7e-9245-8c55cb10a176)
 
-Registro
-![image](https://github.com/user-attachments/assets/634b82e0-ccad-4d22-ae8e-33e4ce6e5320)
-
 
 
