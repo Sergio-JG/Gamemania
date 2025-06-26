@@ -8,8 +8,6 @@ import axios from 'axios';
 
 const ProviderManage: React.FC = () => {
 
-    const API_URL = 'https://gamemania-backend.onrender.com/provider';
-
     const [providers, setProviders] = useState<[]>([]);
     const [page, setPage] = useState(1);
     const [open, setOpen] = useState(false);
@@ -21,7 +19,7 @@ const ProviderManage: React.FC = () => {
 
     const fetchProviders = async () => {
         try {
-            const response = await fetch(API_URL);
+            const response = await fetch(import.meta.env.VITE_API_URL + '/provider');
             if (!response.ok) {
                 throw new Error('Failed to fetch providers');
             }
@@ -64,7 +62,7 @@ const ProviderManage: React.FC = () => {
     {/* ELIMINACION */ }
 
     function handleElimination(provider: Provider): void {
-        axios.delete(API_URL + "/" + provider.providerId)
+        axios.delete(import.meta.env.VITE_API_URL + "/provider/" + provider.providerId)
             .then(response => {
                 alert('Eliminado con exito' + response.data);
             })

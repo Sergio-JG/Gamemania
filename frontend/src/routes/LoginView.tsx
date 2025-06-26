@@ -53,7 +53,7 @@ const LoginView: React.FC = () => {
     e.preventDefault();
     if (await validate()) {
       try {
-        const response = await fetch('https://gamemania-backend.onrender.com/login', {
+        const response = await fetch(import.meta.env.VITE_API_URL + '/user/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

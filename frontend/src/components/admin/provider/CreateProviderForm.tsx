@@ -9,7 +9,6 @@ type OpenProviderFormProps = {
 };
 
 const CreateProviderForm = ({ open, onClose }: OpenProviderFormProps) => {
-    const API_URL = 'https://gamemania-backend.onrender.com/provider';
 
     const [formData, setFormData] = useState<Provider>({
         name: '',
@@ -27,7 +26,7 @@ const CreateProviderForm = ({ open, onClose }: OpenProviderFormProps) => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            await axios.post(API_URL, formData);
+            await axios.post(import.meta.env.VITE_API_URL + '/provider', formData);
             onClose();
         } catch (error) {
             console.error(error);

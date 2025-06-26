@@ -12,8 +12,6 @@ import CreditCardDialog from '../../components/dialog/CreditCardDialog';
 
 const UserManage: React.FC = () => {
 
-    const API_URL = 'https://gamemania-backend.onrender.com/user';
-
     type StateType = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         openCreditCardPopup: any;
@@ -73,7 +71,7 @@ const UserManage: React.FC = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get(API_URL);
+                const response = await axios.get(import.meta.env.VITE_API_URL + '/user');
                 setUsers(response.data);
             } catch (error) {
                 console.error('Error fetching users:', error);

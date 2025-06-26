@@ -36,7 +36,7 @@ const SearchComponent: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://gamemania-backend.onrender.com/game');
+                const response = await fetch(import.meta.env.VITE_API_URL + '/game');
                 if (!response.ok) {
                     throw new Error('ERROR');
                 }

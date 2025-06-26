@@ -21,7 +21,7 @@ const BuyPlatform = () => {
         try {
             const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || '';
             console.log
-            const response = await axios.get(`https://gamemania-backend.onrender.com/user/${userId}`);
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/${userId}`);
             if (response.status == 200) {
                 setUserData(response.data[0]);
                 console.log(userData)
@@ -52,7 +52,7 @@ const BuyPlatform = () => {
 
     const updateStocks = async (cart: CartItem[]) => {
 
-        const API_URL = 'https://gamemania-backend.onrender.com/game';
+
         console.log(cart);
 
         cart.forEach(async (cartItem: CartItem) => {
@@ -60,7 +60,7 @@ const BuyPlatform = () => {
             const newStock = cartItem.stock - cartItem.quantity;
             cartItem.stock = newStock;
             try {
-                const response = await fetch(`${API_URL}/${cartItem?.gameId}`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/${cartItem?.gameId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

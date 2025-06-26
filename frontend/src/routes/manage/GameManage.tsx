@@ -7,15 +7,11 @@ import CreateGameForm from '../../components/admin/game/CreateGameForm';
 import DescriptionDialog from '../../components/dialog/DescriptionDialog';
 import axios from 'axios';
 
-const API_URL = 'https://gamemania-backend.onrender.com/game';
-const API_URL_PROVIDERS = 'https://gamemania-backend.onrender.com/provider';
-const API_URL_PURCHASE = 'https://gamemania-backend.onrender.com/purchase';
-
 const GameManage: React.FC = () => {
 
     const fetchGames = async () => {
         try {
-            const response = await fetch(API_URL);
+            const response = await fetch(import.meta.env.VITE_API_URL + '/game');
             if (!response.ok) {
                 throw new Error('Failed to fetch games');
             }
@@ -28,7 +24,7 @@ const GameManage: React.FC = () => {
 
     const fetchProviders = async () => {
         try {
-            const response = await fetch(API_URL_PROVIDERS);
+            const response = await fetch(import.meta.env.VITE_API_URL + '/provider');
             if (!response.ok) {
                 throw new Error('Failed to fetch proveedores');
             }
@@ -90,7 +86,7 @@ const GameManage: React.FC = () => {
         }
 
         try {
-            const response = await fetch(`${API_URL}/${selectedGame?.gameId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/game/${selectedGame?.gameId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -107,7 +103,7 @@ const GameManage: React.FC = () => {
         }
 
         try {
-            const response = await fetch(API_URL_PURCHASE, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/purchase`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -149,7 +145,7 @@ const GameManage: React.FC = () => {
         }
 
         try {
-            const response = await fetch(`${API_URL}/${selectedGame?.gameId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/${selectedGame?.gameId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -187,7 +183,7 @@ const GameManage: React.FC = () => {
     {/* ELIMINACION */ }
 
     function handleElimination(game: Game): void {
-        axios.delete(API_URL + "/" + game.gameId)
+        axios.delete(`${import.meta.env.VITE_API_URL}"/game/"+${game?.gameId}`)
             .then(response => {
                 alert('Eliminado con exito' + response.data);
             })

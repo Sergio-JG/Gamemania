@@ -7,15 +7,13 @@ import FooterAdmin from '../../components/footer/FooterAdmin';
 
 const PurchaseManage: React.FC = () => {
 
-    const API_URL = 'https://gamemania-backend.onrender.com/purchase';
-
     const [purchase, setPurchases] = useState<Purchase[]>([]);
     const [page, setPage] = useState(1);
 
     useEffect(() => {
         const fetchSales = async () => {
             try {
-                const response = await axios.get(API_URL);
+                const response = await axios.get(import.meta.env.VITE_API_URL + '/purchase');
                 console.log(response.data)
                 setPurchases(response.data);
             } catch (error) {

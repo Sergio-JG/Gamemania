@@ -56,3 +56,4 @@ backend/lombok.config
 # ====================
 # Global test coverage
 /coverage/
+backend/src/main/java/com/tfg/restservice/config/MyConfig.java

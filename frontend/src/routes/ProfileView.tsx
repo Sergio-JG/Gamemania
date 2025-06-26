@@ -14,7 +14,7 @@ const Profile: React.FC = () => {
   const fetchSaleData = async () => {
     try {
       const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || '';
-      const response = await axios.get(`https://gamemania-backend.onrender.com/sale/byUser/${userId}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/sale/byUser/${userId}`);
       const result: Sale[] = response.data;
       setSaleData(result);
     } catch (error) {
@@ -31,7 +31,7 @@ const Profile: React.FC = () => {
   const fetchUserData = async () => {
     try {
       const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || '';
-      const response = await axios.get(`https://gamemania-backend.onrender.com/user/${userId}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/${userId}`);
       const result = response.data;
       if (!personalInfoEditMode) {
         setUserData(result[0]);
@@ -183,7 +183,7 @@ const Profile: React.FC = () => {
     editedCreditCardData.userId = userId;
 
     try {
-      const response = await axios.post(`https://gamemania-backend.onrender.com/creditCard`, editedCreditCardData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/creditCard`, editedCreditCardData, {
         headers: {
           'Content-Type': 'application/json',
         },

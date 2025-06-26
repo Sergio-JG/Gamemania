@@ -10,12 +10,7 @@ type OpenGameFormProps = {
 
 const CreateGameForm = ({ open, onClose }: OpenGameFormProps) => {
 
-    const API_URL = 'https://gamemania-backend.onrender.com/game';
-    const API_URL_GENRES = 'https://gamemania-backend.onrender.com/genre';
-
     const [genres, setGenres] = useState<Genre[]>([]);
-
-    const API_URL_PLATFORMS = 'https://gamemania-backend.onrender.com/platform';
     const [platforms, setPlatforms] = useState<Platform[]>([]);
 
     // const [errors, setErrors] = React.useState({
@@ -43,7 +38,7 @@ const CreateGameForm = ({ open, onClose }: OpenGameFormProps) => {
 
         const fetchGenres = async () => {
             try {
-                const response = await axios.get(API_URL_GENRES);
+                const response = await axios.get(import.meta.env.VITE_API_URL + '/genre');
                 setGenres(response.data);
             } catch (error) {
                 console.error(error);
@@ -52,7 +47,7 @@ const CreateGameForm = ({ open, onClose }: OpenGameFormProps) => {
 
         const fetchPlatforms = async () => {
             try {
-                const response = await axios.get(API_URL_PLATFORMS);
+                const response = await axios.get(import.meta.env.VITE_API_URL + '/platform');
                 setPlatforms(response.data);
             } catch (error) {
                 console.error(error);
@@ -98,7 +93,7 @@ const CreateGameForm = ({ open, onClose }: OpenGameFormProps) => {
         console.log(formattedData)
 
         try {
-            const response = await axios.post(API_URL, formattedData);
+            const response = await axios.post(import.meta.env.VITE_API_URL, formattedData);
             console.log(response.data);
         } catch (error) {
             console.error(error);
