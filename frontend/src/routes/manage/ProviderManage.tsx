@@ -39,13 +39,13 @@ const ProviderManage: React.FC = () => {
         return true;
     };
 
-    useEffect(() => { fetchProviders(); }, []);
+    useEffect(() => { fetchProviders(); });
 
     const handleFormOpen = () => {
         setOpen(true);
     };
 
-    {/* ACCOUNT */ }
+    // ACCOUNT DIALOG
 
     const [openAccountDialog, setOpenAccountDialog] = useState(false);
     const [selectedProvider, setSelectedProvider] = useState({} as Provider);
@@ -59,15 +59,15 @@ const ProviderManage: React.FC = () => {
         setOpenAccountDialog(false);
     };
 
-    {/* ELIMINACION */ }
+    // PROVIDER ELIMINATION
 
     function handleElimination(provider: Provider): void {
         axios.delete(import.meta.env.VITE_API_URL + "/provider/" + provider.providerId)
             .then(response => {
-                alert('Eliminado con exito' + response.data);
+                alert('Eliminado con éxito: ' + response.data);
             })
             .catch(() => {
-                alert('No se pueden eliminar un provedor asociado a compras o ventas');
+                alert('No se puede eliminar un proveedor asociado a compras o ventas');
             });
     }
 

@@ -49,7 +49,7 @@ public class Provider {
 	@Column(name = "email")
 	private String email;
 
-	@OneToMany(mappedBy = "provider", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "provider", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Account> account;
 
 }
