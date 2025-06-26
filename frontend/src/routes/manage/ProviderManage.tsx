@@ -39,7 +39,7 @@ const ProviderManage: React.FC = () => {
         return true;
     };
 
-    useEffect(() => { fetchProviders(); });
+    useEffect(() => { fetchProviders(); }, []);
 
     const handleFormOpen = () => {
         setOpen(true);

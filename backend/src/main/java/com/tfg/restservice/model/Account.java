@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.springframework.lang.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,6 +42,7 @@ public class Account {
 
 	@ManyToOne
 	@JoinColumn(name = "provider_id")
+	@JsonBackReference
 	private Provider provider;
 
 	@Column(name = "account_holder_name")

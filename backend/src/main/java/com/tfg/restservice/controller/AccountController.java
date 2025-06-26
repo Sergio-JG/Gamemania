@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tfg.restservice.dto.AccountDTO;
+import com.tfg.restservice.dtoconverter.AccountDTOConverter;
 import com.tfg.restservice.error.NotFoundException;
 import com.tfg.restservice.model.Account;
 import com.tfg.restservice.repository.AccountRepository;
@@ -28,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class AccountController {
 
 	private final AccountRepository accountRepository;
+	private final AccountDTOConverter accountDTOConverter;
 
 	/**
 	 * Obtain all Account
@@ -37,13 +39,12 @@ public class AccountController {
 
 	@GetMapping("/account")
 	public ResponseEntity<Object> obtainAll() {
-
 		List<Account> result = accountRepository.findAll();
-
 		if (result.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Data not found");
 		} else {
-			return ResponseEntity.ok(result);
+			List<AccountDTO> dtoList = result.stream().map(accountDTOConverter::convertToDto).toList();
+			return ResponseEntity.ok(dtoList);
 		}
 	}
 
@@ -52,93 +53,67 @@ public class AccountController {
 	 *
 	 * @param id
 	 * @return Null if not found
-	 *
 	 */
 
 	@GetMapping("/account/{id}")
 	public ResponseEntity<Object> obtainOne(@PathVariable @NonNull UUID id) {
-
 		Optional<Account> result = accountRepository.findById(id);
-
 		if (result.isEmpty()) {
 			NotFoundException exception = new NotFoundException(id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
 		} else {
-			return ResponseEntity.ok(result);
+			AccountDTO dto = accountDTOConverter.convertToDto(result.get());
+			return ResponseEntity.ok(dto);
 		}
 	}
 
 	/**
-	 * Insert Account
+	 * Add a new Account
 	 *
-	 * @param New
-	 * @return New Account inserted
+	 * @param accountData
+	 * @return
 	 */
 
 	@PostMapping("/account")
 	public ResponseEntity<Object> addAccount(@RequestBody AccountDTO accountData) {
-
-		Account newAccount = new Account();
-
-		newAccount.setBankName(accountData.getBankName());
-		newAccount.setAccountHolderName(accountData.getAccountHolderName());
-		newAccount.setAccountNumber(accountData.getAccountNumber());
-		newAccount.setBankAddress(accountData.getBankAddress());
-		newAccount.setBankRoutingNumber(accountData.getBankRoutingNumber());
-		newAccount.setAccountBalance(accountData.getAccountBalance());
-
-		return ResponseEntity.status(HttpStatus.CREATED).body(accountRepository.save(newAccount));
+		Account newAccount = accountDTOConverter.convertToEntity(accountData);
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(accountDTOConverter.convertToDto(accountRepository.save(newAccount)));
 	}
 
 	/**
+	 * Edit an existing Account
 	 *
-	 * @param editar
+	 * @param accountData
 	 * @param id
 	 * @return
 	 */
 
 	@PutMapping("/account/{id}")
 	public ResponseEntity<Object> editAccount(@RequestBody AccountDTO accountData, @PathVariable @NonNull UUID id) {
-
 		Optional<Account> result = accountRepository.findById(id);
-
 		if (result.isEmpty()) {
-
 			NotFoundException exception = new NotFoundException(id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-
 		} else {
-
-			Account newAccount = new Account();
-
+			Account newAccount = accountDTOConverter.convertToEntity(accountData);
 			newAccount.setAccountId(id);
-			newAccount.setBankName(accountData.getBankName());
-			newAccount.setAccountHolderName(accountData.getAccountHolderName());
-			newAccount.setAccountNumber(accountData.getAccountNumber());
-			newAccount.setBankAddress(accountData.getBankAddress());
-			newAccount.setBankRoutingNumber(accountData.getBankRoutingNumber());
-			newAccount.setAccountBalance(accountData.getAccountBalance());
-
-			return ResponseEntity.status(HttpStatus.OK).body(accountRepository.save(newAccount));
-
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(accountDTOConverter.convertToDto(accountRepository.save(newAccount)));
 		}
 	}
 
 	/**
-	 *
-	 * Borra un Account del catálogo en base a su id
+	 * Delete an Account
 	 *
 	 * @param id
 	 * @return
-	 *
 	 */
 
 	@DeleteMapping("/account/{id}")
 	public ResponseEntity<Object> deleteAccount(@PathVariable @NonNull UUID id) {
-
 		Account account = accountRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
 		accountRepository.delete(account);
-
 		return ResponseEntity.noContent().build();
 	}
 }

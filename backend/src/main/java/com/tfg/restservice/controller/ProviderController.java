@@ -37,15 +37,9 @@ public class ProviderController {
 	 */
 
 	@GetMapping("/provider")
-	public ResponseEntity<Object> obtainAll() {
-		List<Provider> result = providerRepository.findAll();
-
-		if (result.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
-
-		List<ProviderDTO> dtoList = result.stream().map(providerDTOConverter::convertToDto).toList();
-
+	public ResponseEntity<List<ProviderDTO>> getAllProviders() {
+		List<Provider> providers = providerRepository.findAll();
+		List<ProviderDTO> dtoList = providers.stream().map(providerDTOConverter::convertToDto).toList();
 		return ResponseEntity.ok(dtoList);
 	}
 
