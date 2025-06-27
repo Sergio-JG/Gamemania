@@ -50,7 +50,7 @@ const RegisterComponent: React.FC = () => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:8080/userByEmail/${formData.email}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/userByEmail/${formData.email}`);
       if (response.status === 200) {
         setErrors((prevErrors) => ({ ...prevErrors, emailError: 'Este email ya se encuentra registrado' }));
         isValid = false;
