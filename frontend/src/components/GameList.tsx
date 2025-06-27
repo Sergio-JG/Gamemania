@@ -3,13 +3,15 @@ import Typography from '@mui/material/Typography';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Game } from '../interfaces/GameInterface';
-import { Chip } from '@mui/material';
+import { Chip, CircularProgress } from '@mui/material';
 import axios from 'axios';
 
 const GameList = () => {
   const [games, setGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchGames = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(import.meta.env.VITE_API_URL + '/game');
       if (response.status === 200) {
@@ -20,6 +22,8 @@ const GameList = () => {
       }
     } catch (error) {
       console.error('ERROR fetching data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,6 +94,20 @@ const GameList = () => {
       </div>
     </div>
   );
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center border border-yellow-50 rounded-lg p-8 w-full h-full">
+        <Typography
+          className="mt-4 text-lg font-semibold text-white"
+          fontFamily="Roboto"
+        >
+          Cargando juegos... <span className="text-gray-400 text-base">(la instancia es gratis)</span>
+        </Typography>
+        <CircularProgress className="ms-2" color="primary" />
+      </div>
+    );
+  }
 
   return (
     <>
