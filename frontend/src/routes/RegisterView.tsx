@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { TextField, Typography, useTheme, Button } from '@mui/material';
 
 import logo from '../images/logo.png';
-import ImagenLogin from '../images/loginImage.jpg';
+import ImagenLogin from '../images/loginimage.jpg';
 
 const RegisterComponent: React.FC = () => {
   const theme = useTheme();
