@@ -74,7 +74,7 @@ const Footer = () => {
             }}
           >
             <Typography variant="body2" className="text-gray-400">
-              Copyright © 2023 Game Mania - Todos los derechos reservados
+              Copyright © 2023 Gamemania - Todos los derechos reservados
             </Typography>
           </Grid>
 
