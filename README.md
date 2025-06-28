@@ -1,6 +1,6 @@
-# GameMania 🎮
+# Gamemania 🎮
 
-**GameMania** es una aplicación web e-commerce para la venta de videojuegos en línea, cuenta con un sistema completo de autenticación de usuarios y un panel de administración con funcionalidades CRUD para la gestión de la plataforma.
+**Gamemania** es una aplicación web e-commerce para la venta de videojuegos en línea, cuenta con un sistema completo de autenticación de usuarios y un panel de administración con funcionalidades CRUD para la gestión de la plataforma.
 
 ## 🚀 Características
 
@@ -27,7 +27,7 @@
 
 ## 📸 Capturas de pantalla
 
-Main 
+Página principal
 ![image](https://github.com/user-attachments/assets/56c352cf-f6db-41f1-9ec1-aaed6e9d9f9d)
 
 Videojuego en detalle
@@ -35,6 +35,10 @@ Videojuego en detalle
 
 Login
 ![image](https://github.com/user-attachments/assets/74294c6e-83b9-4c7e-9245-8c55cb10a176)
+
+Perfil
+![image](https://github.com/user-attachments/assets/85fc4775-7d71-4013-bac7-7d5a424c0fa8)
+
 
 
 
