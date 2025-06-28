@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { TextField, Typography, useTheme, Button } from '@mui/material';
 
 import logo from '../images/logo.png';
-import ImagenLogin from '../images/loginimage.jpg';
+import ImagenLogin from '../images/loginImage.jpg';
 
 const RegisterComponent: React.FC = () => {
   const theme = useTheme();
@@ -43,14 +43,14 @@ const RegisterComponent: React.FC = () => {
       setErrors((prevErrors) => ({ ...prevErrors, emailError: '' }));
     }
     if (formData.password.length < 6) {
-      setErrors((prevErrors) => ({ ...prevErrors, passwordError: 'La contraseña debe de contener por lo menos 6 caracters' }));
+      setErrors((prevErrors) => ({ ...prevErrors, passwordError: 'La contraseña debe de contener por lo menos 6 caracteres' }));
       isValid = false;
     } else {
       setErrors((prevErrors) => ({ ...prevErrors, passwordError: '' }));
     }
 
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/userByEmail/${formData.email}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/userByEmail?email=${formData.email}`);
       if (response.status === 200) {
         setErrors((prevErrors) => ({ ...prevErrors, emailError: 'Este email ya se encuentra registrado' }));
         isValid = false;

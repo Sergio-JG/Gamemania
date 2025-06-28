@@ -2,19 +2,24 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Grid from '@mui/material/Grid';
 import { IconButton, List, ListItem, Typography, Box } from '@mui/material';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDiscord, faInstagram, faYoutube, faXTwitter } from '@fortawesome/free-brands-svg-icons';
-
-const footerStyles = {
-  background: 'black',
-  color: 'white',
-  padding: 10,
-};
+import { useState } from "react";
+import TermsDialog from '../dialog/TermsDialog';
+import PrivacyDialog from '../dialog/PrivacyDialog';
+import ContactDialog from '../dialog/ContactDialog';
+import FaqDialog from '../dialog/FaqDialog';
 
 const Footer = () => {
+
+  // Dialog state
+  const [termsOpen, setTermsOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+  const [faqOpen, setFaqOpen] = useState(false);
+
   return (
-    <AppBar position="static" style={footerStyles} component="footer">
+    <AppBar position="static" component="footer">
       <Toolbar
         sx={{
           minHeight: { xs: 120, md: 200 },
@@ -23,6 +28,7 @@ const Footer = () => {
           justifyContent: 'center',
           px: { xs: 1, md: 10 },
         }}
+        className="!bg-black"
       >
         <Grid
           container
@@ -67,7 +73,7 @@ const Footer = () => {
               textAlign: 'center',
             }}
           >
-            <Typography variant="body2">
+            <Typography variant="body2" className="text-gray-400">
               Copyright © 2023 Game Mania - Todos los derechos reservados
             </Typography>
           </Grid>
@@ -82,23 +88,48 @@ const Footer = () => {
               textAlign: { xs: 'center', md: 'end' },
             }}
           >
-            <List sx={{ display: 'inline-block', p: 0 }}>
-              <ListItem sx={{ display: 'inline', p: 0, mx: 1 }}>
-                <Typography variant="body2">Términos y condiciones</Typography>
+            <List sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', md: 'flex-end' }, p: 0 }}>
+              <ListItem sx={{ display: 'block', p: 0, my: 0.5 }}>
+                <button
+                  className="text-white hover:underline font-semibold transition-colors duration-150 text-xs"
+                  onClick={() => setTermsOpen(true)}
+                >
+                  Términos y condiciones
+                </button>
               </ListItem>
-              <ListItem sx={{ display: 'inline', p: 0, mx: 1 }}>
-                <Typography variant="body2">Política de privacidad</Typography>
+              <ListItem sx={{ display: 'block', p: 0, my: 0.5 }}>
+                <button
+                  className="text-white hover:underline font-semibold transition-colors duration-150 text-xs"
+                  onClick={() => setPrivacyOpen(true)}
+                >
+                  Política de privacidad
+                </button>
               </ListItem>
-              <ListItem sx={{ display: 'inline', p: 0, mx: 1 }}>
-                <Typography variant="body2">Contacto</Typography>
+              <ListItem sx={{ display: 'block', p: 0, my: 0.5 }}>
+                <button
+                  className="text-white hover:underline font-semibold transition-colors duration-150 text-xs"
+                  onClick={() => setContactOpen(true)}
+                >
+                  Contacto
+                </button>
               </ListItem>
-              <ListItem sx={{ display: 'inline', p: 0, mx: 1 }}>
-                <Typography variant="body2">Preguntas frecuentes</Typography>
+              <ListItem sx={{ display: 'block', p: 0, my: 0.5 }}>
+                <button
+                  className="text-white hover:underline font-semibold transition-colors duration-150 text-xs"
+                  onClick={() => setFaqOpen(true)}
+                >
+                  Preguntas frecuentes
+                </button>
               </ListItem>
             </List>
           </Grid>
         </Grid>
       </Toolbar>
+      {/* Dialogs */}
+      <TermsDialog open={termsOpen} onClose={() => setTermsOpen(false)} />
+      <PrivacyDialog open={privacyOpen} onClose={() => setPrivacyOpen(false)} />
+      <ContactDialog open={contactOpen} onClose={() => setContactOpen(false)} />
+      <FaqDialog open={faqOpen} onClose={() => setFaqOpen(false)} />
     </AppBar>
   );
 };

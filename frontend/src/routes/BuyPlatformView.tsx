@@ -1,98 +1,71 @@
 import { useContext, useEffect, useState } from 'react';
-import { Avatar, Box, Button, Divider, Grid, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import { Avatar, Button, Divider } from '@mui/material';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import { CartContext } from '../components/CartContext';
 import CartItem, { User } from '../interfaces/GameInterface';
-import { ArrowRight } from '@mui/icons-material';
-import defaultPic from '../images/default.jpg';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import TermsDialog from '../components/dialog/TermsDialog';
 
 const BuyPlatform = () => {
 
     const { cart, getTotalPrice } = useContext(CartContext);
     const [userData, setUserData] = useState<User | null>(null);
-
-    // const [saleData, setSaleData] = useState<Sale>({} as Sale);
-    // const [saleDetailData, setSaleDetailData] = useState<SaleDetail>({} as SaleDetail);
+    const [termsOpen, setTermsOpen] = useState(false);
 
     const fetchUserData = async () => {
         try {
             const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || '';
-            console.log
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/${userId}`);
-            if (response.status == 200) {
+            if (response.status === 200) {
                 setUserData(response.data[0]);
-                console.log(userData)
             }
         } catch (error) {
-            console.error('ERROR submitting data:', error);
+            console.error('ERROR fetching user data:', error);
         }
-    }
+    };
 
-    useEffect(() => { fetchUserData() }, []);
+    useEffect(() => { fetchUserData(); }, []);
 
     const generateSaleData = (cart: CartItem[]) => {
         const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || '';
         const saleDate = new Date().toISOString().split('T')[0];
-
         const saleDetail = cart.map((item) => ({
             gameId: item.gameId,
             quantity: item.quantity,
             subtotal: item.price,
         }));
-
-        return {
-            userId,
-            saleDate,
-            saleDetail,
-        };
+        return { userId, saleDate, saleDetail };
     };
 
     const updateStocks = async (cart: CartItem[]) => {
-
-
-        console.log(cart);
-
         cart.forEach(async (cartItem: CartItem) => {
-            console.log(cartItem)
             const newStock = cartItem.stock - cartItem.quantity;
             cartItem.stock = newStock;
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/${cartItem?.gameId}`, {
+                await fetch(`${import.meta.env.VITE_API_URL}/${cartItem?.gameId}`, {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(cartItem),
                 });
-
-                if (response.ok) {
-                    console.log("update")
-                }
-
             } catch (error) {
                 console.error('Error updating stock:', error);
             }
         });
-    }
+    };
 
     const navigate = useNavigate();
 
     const handleConfirmSale = async () => {
-
         updateStocks(cart);
         const saleData = generateSaleData(cart);
         try {
             const response = await axios.post('http://localhost:8080/sale', saleData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
             });
             if (response.status === 201) {
                 navigate("/profile");
-                console.log('Confirmado');
             } else {
                 console.error('Failed to confirm sale');
             }
@@ -101,145 +74,210 @@ const BuyPlatform = () => {
         }
     };
 
+    // Helper for masking card number
+    const maskCard = (num?: string) =>
+        num ? num.replace(/\d{12}(\d{4})/, '**** **** **** $1') : 'No hay datos';
+
     return (
         <>
             <Header />
-            <Grid container sx={{ minHeight: '60vh' }}>
-                <Grid item xs={12} sm={6} md={7}>
-                    <Grid direction="column" alignItems="center" justifyContent="center" style={{ width: '100%', padding: 20, margin: 20 }}>
-                        <Grid item display='flex' alignItems="center" justifyContent="left" margin='25px'>
-                            <Typography variant="h3"> Confirmación de compra </Typography>
-                        </Grid>
-                        {userData && (
-                            <>
-                                <Box border={1} borderRadius={4} borderColor="grey.400" marginBottom={2}>
-                                    {userData && userData.address ? (
-                                        <><Grid container style={{ textAlign: 'left', margin: '20px' }}>
-                                            <Typography variant="h5">Dirección de envio</Typography>
-                                            <Button variant="outlined" /* onClick={handleChangeAddress} */ style={{ marginLeft: '20px' }}>
-                                                Cambiar dirección
-                                            </Button>
-                                        </Grid><Grid container style={{ textAlign: 'left', margin: '30px' }}>
-                                                <List>
-                                                    <ListItem>
-                                                        <ArrowRight style={{ color: 'black' }}></ArrowRight>
-                                                        <Typography variant="body1">Street: {userData.address.streetAddress}</Typography>
-                                                    </ListItem>
-                                                    <ListItem>
-                                                        <ArrowRight style={{ color: 'black' }}></ArrowRight>
-                                                        <Typography variant="body1">City: {userData.address.city}</Typography>
-                                                    </ListItem>
-                                                    <ListItem>
-                                                        <ArrowRight style={{ color: 'black' }}></ArrowRight>
-                                                        <Typography variant="body1">State: {userData.address.state}</Typography>
-                                                    </ListItem>
-                                                    <ListItem>
-                                                        <ArrowRight style={{ color: 'black' }}></ArrowRight>
-                                                        <Typography variant="body1">Postal Code: {userData.address.postalCode}</Typography>
-                                                    </ListItem>
-                                                    <ListItem>
-                                                        <ArrowRight style={{ color: 'black' }}></ArrowRight>
-                                                        <Typography variant="body1">Country: {userData.address.country}</Typography>
-                                                    </ListItem>
-                                                </List>
-                                            </Grid></>
-                                    ) : (
-                                        <Grid padding={5}>
-                                            <Typography>No hay dirección disponible</Typography>
-                                        </Grid>
-                                    )}
-                                </Box>
-                                <Box border={1} borderRadius={4} borderColor="grey.400" marginBottom={2}>
-                                    {userData && userData.creditCard.length > 0 ? (
-                                        <>
-                                            <Grid container style={{ textAlign: 'left', margin: '20px' }}>
-                                                <Typography variant="h5"> Tarjeta de crédito </Typography>
-                                                <Button variant="outlined" /* onClick={handleChangeAddress} */ style={{ marginLeft: '20px' }}> Cambiar tarjeta </Button>
-                                            </Grid>
-                                            <Grid container style={{ textAlign: 'left', margin: '30px' }}>
-                                                <List>
-                                                    <ListItem>
-                                                        <ArrowRight style={{ color: 'black' }} />
-                                                        <Typography variant="body1">Card Number: {userData.creditCard[0].cardNumber}</Typography>
-                                                    </ListItem>
-                                                    <ListItem>
-                                                        <ArrowRight style={{ color: 'black' }}></ArrowRight>
-                                                        <Typography variant="body1">Cardholder Name: {userData.creditCard[0].cardHolderName}</Typography>
-                                                    </ListItem >
-                                                    <ListItem>
-                                                        <ArrowRight style={{ color: 'black' }}></ArrowRight>
-                                                        <Typography variant="body1">Expiration Date: {userData.creditCard[0].expirationDate}</Typography>
-                                                    </ListItem >
-                                                    <ListItem>
-                                                        <ArrowRight style={{ color: 'black' }}></ArrowRight>
-                                                        <Typography variant="body1">CVV: {userData.creditCard[0].cvv}</Typography>
-                                                    </ListItem >
-                                                    <ListItem>
-                                                        <ArrowRight style={{ color: 'black' }}></ArrowRight>
-                                                        <Typography variant="body1">Billing Address: {userData.creditCard[0].billingAddress}</Typography>
-                                                    </ListItem >
-                                                </List >
-                                            </Grid>
-                                        </>
-                                    ) : (
-                                        <Grid padding={5}>
-                                            <Typography>No hay tarjeta de crédito disponible</Typography>
-                                        </Grid>
-                                    )}
-                                </Box>
-                            </>
-                        )}
-                    </Grid >
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                    <Grid direction="column" alignItems="center" justifyContent="center" style={{ height: '85.8%', width: '100%', padding: 20, margin: 20 }}>
-                        <Grid item display='flex' alignItems="center" justifyContent="left" margin='25px'>
-                            <Typography variant="h3"> Carrito de compra </Typography>
-                        </Grid>
-                        {cart && (
-                            <>
-                                <List sx={{ flexGrow: 1 }}>
-                                    {cart.map((item, index) => (
-                                        <div key={index}>
-                                            <ListItem>
-                                                <ListItemAvatar>
-                                                    <Avatar src={defaultPic} />
-                                                </ListItemAvatar>
-                                                <ListItemText primary={item.title} />
-                                                <Typography variant="h6">{`$${item.price}`}</Typography>
-                                                <Typography variant="body1">{`(${item.quantity})`}</Typography>
-                                            </ListItem>
+            <div className="mx-auto px-2 sm:px-8 md:px-24 lg:px-32 py-8 bg-neutral-800 min-h-screen">
+                <div className="flex flex-col lg:flex-row gap-8">
+                    {/* LEFT: User Info & Payment */}
+                    <div className="rounded-2xl shadow-lg p-8 flex-1 border-2 border-yellow-400 bg-[#18181b] min-w-0 transition-shadow duration-200 hover:shadow-yellow-400/40">
+                        <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-8 text-yellow-400 font-['Roboto_Slab','Roboto',sans-serif] tracking-tight drop-shadow">
+                            Confirmación de compra
+                        </h2>
+                        {/* Shipping Address */}
+                        <div className="mb-10">
+                            <h3 className="text-xl font-semibold mb-4 text-white font-['Roboto_Slab','Roboto',sans-serif]">Dirección de envío</h3>
+                            <div className="bg-neutral-700 rounded-xl p-4 border border-yellow-300 mb-4 flex flex-col gap-2">
+                                {userData?.address ? (
+                                    <>
+                                        <div className="flex flex-wrap gap-4 items-center">
+                                            <span className="font-semibold text-yellow-400">Calle:</span>
+                                            <span className="text-gray-200">{userData.address.streetAddress}</span>
                                         </div>
-                                    ))}
-                                </List><Divider /><Grid container justifyContent="space-between" padding={2}>
-                                    <Grid item xs={6}>
-                                        <h3>Subtotal:</h3>
-                                    </Grid>
-                                    <Grid item xs={6} sx={{ textAlign: 'right' }}>
-                                        <h3>${getTotalPrice().toFixed(2)}</h3>
-                                    </Grid>
-                                </Grid>
-                                <Grid item container alignItems="center" justifyContent="space-between">
-                                    {userData && userData.creditCard.length > 0 && userData.address ? (
-                                        <><Button variant="contained" color="warning" href="/" style={{ width: '40%' }}>
-                                            Cancelar compra
-                                        </Button><Button variant="contained" onClick={handleConfirmSale} style={{ width: '40%' }}>
-                                                Confirmar compra
-                                            </Button></>
-                                    ) : (
-                                        <>
-                                            <Grid item container alignItems="center" justifyContent="center">
-                                                <Typography color="red" variant='body2'> Se necesita una tarjeta de crédito y una dirección de facturacion para comprar </Typography>
-                                                <Button variant="contained" component={Link} to="/profile" style={{ margin: 20, width: '40%' }}>IR AL PERFIL</Button>
-                                            </Grid>
-                                        </>
-                                    )}
-                                </Grid>
-                            </>
-                        )}
-                    </Grid >
-                </Grid>
-            </Grid >
+                                        <div className="flex flex-wrap gap-4 items-center">
+                                            <span className="font-semibold text-yellow-400">Ciudad:</span>
+                                            <span className="text-gray-200">{userData.address.city}</span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-4 items-center">
+                                            <span className="font-semibold text-yellow-400">Estado:</span>
+                                            <span className="text-gray-200">{userData.address.state}</span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-4 items-center">
+                                            <span className="font-semibold text-yellow-400">Código Postal:</span>
+                                            <span className="text-gray-200">{userData.address.postalCode}</span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-4 items-center">
+                                            <span className="font-semibold text-yellow-400">País:</span>
+                                            <span className="text-gray-200">{userData.address.country}</span>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="text-red-400">No hay dirección disponible</div>
+                                )}
+                            </div>
+                            <div className="flex justify-end">
+                                <Button
+                                    variant="outlined"
+                                    component={Link}
+                                    to="/profile"
+                                    className="border-yellow-400 text-yellow-400 hover:bg-yellow-50"
+                                >
+                                    Cambiar dirección
+                                </Button>
+                            </div>
+                        </div>
+                        {/* Credit Card */}
+                        <div className="mb-10">
+                            <h3 className="text-xl font-semibold mb-4 text-white font-['Roboto_Slab','Roboto',sans-serif]">Tarjeta de crédito</h3>
+                            <div className="bg-neutral-700  rounded-xl p-4 border border-yellow-300 mb-4 flex flex-col gap-2">
+                                {userData?.creditCard && userData.creditCard.length > 0 ? (
+                                    <>
+                                        <div className="flex flex-wrap gap-4 items-center">
+                                            <span className="font-semibold text-yellow-700">Número:</span>
+                                            <span className="text-gray-700">{maskCard(userData.creditCard[0].cardNumber)}</span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-4 items-center">
+                                            <span className="font-semibold text-yellow-700">Titular:</span>
+                                            <span className="text-gray-700">{userData.creditCard[0].cardHolderName}</span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-4 items-center">
+                                            <span className="font-semibold text-yellow-700">Expira:</span>
+                                            <span className="text-gray-700">{userData.creditCard[0].expirationDate}</span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-4 items-center">
+                                            <span className="font-semibold text-yellow-700">CVV:</span>
+                                            <span className="text-gray-700">***</span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-4 items-center">
+                                            <span className="font-semibold text-yellow-700">Dirección de facturación:</span>
+                                            <span className="text-gray-700">{userData.creditCard[0].billingAddress}</span>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="text-red-400">No hay tarjeta de crédito disponible</div>
+                                )}
+                            </div>
+                            <div className="flex justify-end">
+                                <Button
+                                    variant="outlined"
+                                    component={Link}
+                                    to="/profile"
+                                    className="border-yellow-400 text-yellow-400 hover:bg-yellow-50"
+                                >
+                                    Cambiar tarjeta
+                                </Button>
+                            </div>
+                        </div>
+                        {/* Extra: Order Summary */}
+                        <div className="mb-10">
+                            <h3 className="text-xl font-semibold mb-4 text-white font-['Roboto_Slab','Roboto',sans-serif]">Resumen del pedido</h3>
+                            <div className="bg-neutral-700 rounded-xl p-4 border border-yellow-300 mb-4">
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex justify-between text-gray-200">
+                                        <span>Subtotal:</span>
+                                        <span>€{getTotalPrice().toFixed(2)}</span>
+                                    </div>
+                                    <div className="flex justify-between text-gray-200">
+                                        <span>Envío:</span>
+                                        <span>Gratis</span>
+                                    </div>
+                                    <div className="flex justify-between text-yellow-400 font-bold text-lg mt-2">
+                                        <span>Total:</span>
+                                        <span>€{getTotalPrice().toFixed(2)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* Extra: Terms and Confirm */}
+                        <div className="flex flex-col gap-4">
+                            <div className="text-xs text-gray-400 mb-2">
+                                Al confirmar la compra aceptas los{' '}
+                                <span
+                                    className="underline text-yellow-400 cursor-pointer"
+                                    onClick={() => setTermsOpen(true)}
+                                    tabIndex={0}
+                                    role="button"
+                                    onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setTermsOpen(true); }}
+                                >
+                                    términos y condiciones
+                                </span>.
+                            </div>
+                            {/* Terms and Conditions Dialog */}
+                            <TermsDialog open={termsOpen} onClose={() => setTermsOpen(false)} />
+                            <div className="flex gap-4">
+                                <Button
+                                    variant="contained"
+                                    color="warning"
+                                    href="/"
+                                    className="bg-yellow-400 text-black font-bold hover:bg-yellow-500 w-1/2"
+                                >
+                                    Cancelar compra
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    onClick={handleConfirmSale}
+                                    disabled={
+                                        !userData?.creditCard?.length ||
+                                        !userData?.address ||
+                                        cart.length === 0
+                                    }
+                                    className="bg-yellow-400 text-black font-bold hover:bg-yellow-500 w-1/2"
+                                >
+                                    Confirmar compra
+                                </Button>
+                            </div>
+                            {(!userData?.creditCard?.length || !userData?.address) && (
+                                <div className="text-red-400 text-center mt-2">
+                                    Se necesita una tarjeta de crédito y una dirección de facturación para comprar.
+                                    <Button
+                                        variant="contained"
+                                        component={Link}
+                                        style={{ marginInlineStart: 10 }}
+                                        to="/profile"
+                                        className="bg-yellow-400 text-black font-bold hover:bg-yellow-500 mt-2"
+                                    >
+                                        Ir al perfil
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    {/* RIGHT: Cart */}
+                    <div className="rounded-2xl shadow-lg p-8 flex-1 border-2 border-yellow-400 bg-[#18181b] min-w-0 transition-shadow duration-200 hover:shadow-yellow-400/40">
+                        <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-14 text-yellow-400 font-['Roboto_Slab','Roboto',sans-serif] tracking-tight drop-shadow">
+                            Carrito de compra
+                        </h2>
+                        <div className="space-y-4">
+                            {cart && cart.length > 0 ? (
+                                cart.map((item, index) => (
+                                    <div key={index} className="flex items-center gap-4 bg-neutral-700 rounded-lg p-4 border border-yellow-300">
+                                        <Avatar src={`${import.meta.env.VITE_GAME_IMAGES_URL || ''}${item.image}`} />
+                                        <div className="flex-1">
+                                            <div className="font-semibold text-yellow-200">{item.title}</div>
+                                            <div className="text-gray-300 text-sm">Cantidad: {item.quantity}</div>
+                                        </div>
+                                        <div className="font-bold text-yellow-400 text-lg">€{item.price}</div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="text-gray-400 text-center">El carrito está vacío.</div>
+                            )}
+                        </div>
+                        <Divider className="my-6" />
+                        <div className="flex justify-between items-center mt-4">
+                            <span className="text-lg font-semibold text-white">Total:</span>
+                            <span className="text-2xl font-bold text-yellow-400">€{getTotalPrice().toFixed(2)}</span>
+                        </div>
+                        <div className="mt-8 text-center text-gray-400 text-sm">
+                            ¿Tienes un cupón? <span className="underline text-yellow-400 cursor-pointer">Añadir cupón</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <Footer />
         </>
     );

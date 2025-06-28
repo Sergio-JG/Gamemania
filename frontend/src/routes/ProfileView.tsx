@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Grid, Typography, Divider } from '@mui/material';
+import { TextField, Button, Divider } from '@mui/material';
 import { CreditCard, User, Sale, Social, Address } from '../interfaces/GameInterface';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
@@ -86,7 +86,7 @@ const Profile: React.FC = () => {
         console.error('ERROR submitting data:', error);
       }
       try {
-        const response = await axios.put(`http://localhost:8080/user/${userId}`, editedUserData, {
+        const response = await axios.put(`${userId}/user/${userId}`, editedUserData, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -249,412 +249,446 @@ const Profile: React.FC = () => {
 
   {/* GENERAL */ }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchUserData(); fetchSaleData(); }, []);
 
   return (
     <>
       <Header />
-      <Grid container justifyContent={'space-evenly'} padding={5}>
-        <Grid item xs={12} md={5} border={1} borderRadius={4} borderColor="grey.400" margin={2}>
-          <Typography variant="h2" align="center" margin={2}> User Profile </Typography>
-          <Grid container padding={2}>
-
+      <div className="mx-auto px-2 sm:px-8 md:px-24 lg:px-32 py-8 bg-neutral-800 min-h-screen">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* User Profile Card */}
+          <div className="rounded-2xl shadow-lg p-8 flex-1 border border-gray-700 bg-[#18181b] min-w-0">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-8 text-white font-['Roboto_Slab','Roboto',sans-serif] tracking-tight">
+              Perfil de usuario
+            </h2>
             {/* USER */}
-
-            <Grid item xs={12} sm={12}>
-              <Typography variant="h6"> Información personal </Typography>
-              <Grid item xs={12} sm={12} paddingY={2}>
+            <div className="mb-10">
+              <h3 className="text-xl font-semibold mb-4 text-white font-['Roboto_Slab','Roboto',sans-serif]">Información personal</h3>
+              <div className="space-y-4">
+                {[
+                  {
+                    label: "Nombre",
+                    field: "firstName",
+                    value: editedUserData?.firstName,
+                    display: userData?.firstName,
+                  },
+                  {
+                    label: "Apellido",
+                    field: "lastName",
+                    value: editedUserData?.lastName,
+                    display: userData?.lastName,
+                  },
+                  {
+                    label: "Correo electrónico",
+                    field: "email",
+                    value: editedUserData?.email,
+                    display: userData?.email,
+                    error: errors.emailError,
+                  },
+                ].map(({ label, field, value, display, error }) => (
+                  <div key={field}>
+                    {personalInfoEditMode ? (
+                      <>
+                        <TextField
+                          label={label}
+                          value={value}
+                          onChange={(e) => handleUserDataChange(field, e.target.value)}
+                          fullWidth
+                          className="bg-gray-50 rounded"
+                          size="small"
+                        />
+                        {field === "email" && error && (
+                          <div className="text-xs text-red-500 mt-1">
+                            <span>{error}</span>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div className="text-gray-200">
+                        <span className="font-medium">{label}:</span>{" "}
+                        {display ? (
+                          display
+                        ) : (
+                          <span className="text-gray-500">No hay datos</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <Divider className="my-6" />
+              <div className="flex justify-center gap-4 mt-4">
                 {personalInfoEditMode ? (
-                  <TextField
-                    label="First Name"
-                    value={editedUserData?.firstName}
-                    onChange={(e) => handleUserDataChange('firstName', e.target.value)}
-                    fullWidth
-                  />
+                  <>
+                    <Button variant="contained" onClick={handlePersonalInfoSubmit} className="bg-blue-600 font-bold">Aceptar</Button>
+                    <Button variant="outlined" onClick={handlePersonalInfoCancelEdit}>Cancelar</Button>
+                  </>
                 ) : (
-                  <Typography>
-                    First Name: {userData?.firstName || 'No hay datos'}
-                  </Typography>
+                  <Button variant="contained" onClick={handlePersonalInfoEdit} className="bg-blue-600 font-bold">Editar</Button>
                 )}
-              </Grid>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                {personalInfoEditMode ? (
-                  <TextField
-                    label="Last Name"
-                    value={editedUserData?.lastName}
-                    onChange={(e) => handleUserDataChange('lastName', e.target.value)}
-                    fullWidth
-                  />
-                ) : (
-                  <Typography>
-                    Last Name: {userData?.lastName || 'No hay datos'}
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                {personalInfoEditMode ? (
-                  <><TextField
-                    label="Email"
-                    value={editedUserData?.email}
-                    onChange={(e) => handleUserDataChange('email', e.target.value)}
-                    fullWidth /><Typography variant='caption' color="error">
-                      {errors.emailError && <span>{errors.emailError}</span>}
-                    </Typography></>
-                ) : (
-                  <Typography>
-                    Email: {userData?.email || 'No hay datos'}
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                <Divider />
-              </Grid>
-            </Grid>
-            {personalInfoEditMode ? (
-              <Grid container justifyContent="space-between" padding={2}>
-                <Grid item>
-                  <Button variant="contained" onClick={handlePersonalInfoSubmit}>Aceptar</Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="contained" onClick={handlePersonalInfoCancelEdit}>Cancelar</Button>
-                </Grid>
-              </Grid>
-            ) : (
-              <Grid container justifyContent="center" padding={3}>
-                <Grid item>
-                  <Button variant="contained" onClick={handlePersonalInfoEdit}> Editar </Button>
-                </Grid>
-              </Grid>
-            )}
-
+              </div>
+            </div>
             {/* SOCIAL */}
-
-            <Grid item xs={12} sm={12}>
-              <Typography variant="h6">Social Media</Typography>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                {socialEditMode ? (
-                  <TextField
-                    label="Discord Tag"
-                    value={editedSocialData.discordTag}
-                    onChange={(e) => handleSocialDataChange('discordTag', e.target.value)}
-                    fullWidth
-                  />
-                ) : (
-                  <Typography>
-                    Discord Tag: {userData?.social?.discordTag || 'No hay datos'}
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                {socialEditMode ? (
-                  <TextField
-                    label="Steam URL"
-                    value={editedSocialData.steamUrl}
-                    onChange={(e) => handleSocialDataChange('steamUrl', e.target.value)}
-                    fullWidth
-                  />
-                ) : (
-                  <Typography>
-                    Steam URL: {userData?.social?.steamUrl || 'No hay datos'}
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                {socialEditMode ? (
-                  <TextField
-                    label="Twitch URL"
-                    value={editedSocialData.twitchUrl}
-                    onChange={(e) => handleSocialDataChange('twitchUrl', e.target.value)}
-                    fullWidth
-                  />
-                ) : (<Typography>
-                  Twitch URL: {userData?.social?.twitchUrl || 'No hay datos'}
-                </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                {socialEditMode ? (
-                  <TextField
-                    label="YouTube URL"
-                    value={editedSocialData.youtubeUrl}
-                    onChange={(e) => handleSocialDataChange('youtubeUrl', e.target.value)}
-                    fullWidth
-                  />
-                ) : (
-                  <Typography>
-                    YouTube URL: {userData?.social?.youtubeUrl || 'No hay datos'}
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                <Divider />
-              </Grid>
-            </Grid>
-            {socialEditMode ? (
-              <Grid container justifyContent="space-between" padding={2}>
-                <Grid item>
-                  <Button variant="contained" onClick={handlePersonalInfoSubmit}>Aceptar</Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="contained" onClick={handleSocialCancelEdit}>Cancelar</Button>
-                </Grid>
-              </Grid>
-            ) : (
-              <Grid container justifyContent="center" padding={3}>
-                <Grid item>
-                  <Button variant="contained" onClick={handleSocialDataEdit}> Editar </Button>
-                </Grid>
-              </Grid>
-            )}
-
+            <div className="mb-10">
+              <h3 className="text-xl font-semibold mb-4 text-white font-['Roboto_Slab','Roboto',sans-serif]">Redes sociales</h3>
+              <div className="space-y-4">
+                <div>
+                  {socialEditMode ? (
+                    <TextField
+                      label="Discord Tag"
+                      value={editedSocialData.discordTag}
+                      onChange={(e) => handleSocialDataChange('discordTag', e.target.value)}
+                      fullWidth
+                      className="bg-gray-50 rounded"
+                      size="small"
+                    />
+                  ) : (
+                    <div className="text-gray-200 flex items-center gap-2">
+                      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/discord.svg" alt="Discord" className="w-5 h-5" />
+                      <span className="font-medium">Discord:</span>{" "}
+                      {userData?.social?.discordTag ? (
+                        userData?.social?.discordTag
+                      ) : (
+                        <span className="text-gray-500">No hay datos</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {socialEditMode ? (
+                    <TextField
+                      label="Steam URL"
+                      value={editedSocialData.steamUrl}
+                      onChange={(e) => handleSocialDataChange('steamUrl', e.target.value)}
+                      fullWidth
+                      className="bg-gray-50 rounded"
+                      size="small"
+                    />
+                  ) : (
+                    <div className="text-gray-200 flex items-center gap-2">
+                      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/steam.svg" alt="Steam" className="w-5 h-5" />
+                      <span className="font-medium">Steam:</span>{" "}
+                      {userData?.social?.steamUrl ? (
+                        userData?.social?.steamUrl
+                      ) : (
+                        <span className="text-gray-500">No hay datos</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {socialEditMode ? (
+                    <TextField
+                      label="Twitch URL"
+                      value={editedSocialData.twitchUrl}
+                      onChange={(e) => handleSocialDataChange('twitchUrl', e.target.value)}
+                      fullWidth
+                      className="bg-gray-50 rounded"
+                      size="small"
+                    />
+                  ) : (
+                    <div className="text-gray-200 flex items-center gap-2">
+                      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitch.svg" alt="Twitch" className="w-5 h-5" />
+                      <span className="font-medium">Twitch:</span>{" "}
+                      {userData?.social?.twitchUrl ? (
+                        userData?.social?.twitchUrl
+                      ) : (
+                        <span className="text-gray-500">No hay datos</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {socialEditMode ? (
+                    <TextField
+                      label="YouTube URL"
+                      value={editedSocialData.youtubeUrl}
+                      onChange={(e) => handleSocialDataChange('youtubeUrl', e.target.value)}
+                      fullWidth
+                      className="bg-gray-50 rounded"
+                      size="small"
+                    />
+                  ) : (
+                    <div className="text-gray-200 flex items-center gap-2">
+                      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube" className="w-5 h-5" />
+                      <span className="font-medium">YouTube:</span>{" "}
+                      {userData?.social?.youtubeUrl ? (
+                        userData?.social?.youtubeUrl
+                      ) : (
+                        <span className="text-gray-500">No hay datos</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <Divider className="my-6" />
+              {socialEditMode ? (
+                <div className="flex gap-4 justify-end mt-4">
+                  <Button variant="contained" onClick={handlePersonalInfoSubmit} className="bg-blue-600 font-bold">Aceptar</Button>
+                  <Button variant="outlined" onClick={handleSocialCancelEdit}>Cancelar</Button>
+                </div>
+              ) : (
+                <div className="flex justify-center mt-4">
+                  <Button variant="contained" onClick={handleSocialDataEdit} className="bg-blue-600 font-bold">Editar</Button>
+                </div>
+              )}
+            </div>
             {/* ADDRESS */}
-
-            <Grid item xs={12} sm={12}>
-              <Typography variant="h6">Address Information</Typography>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                {addressEditMode ? (
-                  <TextField
-                    label="Ciudad"
-                    value={editedUserData?.address?.city}
-                    onChange={(e) => handleAddressDataChange('city', e.target.value)}
-                    fullWidth
-                  />
-                ) : (
-                  <Typography>
-                    City: {userData?.address?.city || 'No hay datos'}
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                {addressEditMode ? (
-                  <TextField
-                    label="Pais"
-                    value={editedUserData?.address?.country}
-                    onChange={(e) => handleAddressDataChange('country', e.target.value)}
-                    fullWidth
-                  />
-                ) : (
-                  <Typography>
-                    Country: {userData?.address?.country || 'No hay datos'}
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                {addressEditMode ? (
-                  <TextField
-                    label="Codigo postal"
-                    value={editedUserData?.address?.postalCode}
-                    onChange={(e) => handleAddressDataChange('postalCode', e.target.value)}
-                    fullWidth
-                  />
-                ) : (
-                  <Typography>
-                    Postal Code: {userData?.address?.postalCode || 'No hay datos'}
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                {addressEditMode ? (
-                  <TextField
-                    label="Estado"
-                    value={editedUserData?.address?.state}
-                    onChange={(e) => handleAddressDataChange('state', e.target.value)}
-                    fullWidth
-                  />
-                ) : (
-                  <Typography>
-                    State: {userData?.address?.state || 'No hay datos'}
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                {addressEditMode ? (
-                  <TextField
-                    label="Direccion de facturacion"
-                    value={editedUserData?.address?.streetAddress}
-                    onChange={(e) => handleAddressDataChange('streetAddress', e.target.value)}
-                    fullWidth
-                  />
-                ) : (
-                  <Typography>
-                    Street Address: {userData?.address?.streetAddress || 'No hay datos'}
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                <Divider />
-              </Grid>
-            </Grid>
-            {addressEditMode ? (
-              <Grid container justifyContent="space-between" padding={2}>
-                <Grid item>
-                  <Button variant="contained" onClick={handlePersonalInfoSubmit}>Aceptar</Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="contained" onClick={handleAddressDataCancelEdit}>Cancelar</Button>
-                </Grid>
-              </Grid>
-            ) : (
-              <Grid container justifyContent="center" padding={3}>
-                <Grid item>
-                  <Button variant="contained" onClick={handleAddressDataEdit}> Editar </Button>
-                </Grid>
-              </Grid>
-            )}
-
+            <div className="mb-10">
+              <h3 className="text-xl font-semibold mb-4 text-white font-['Roboto_Slab','Roboto',sans-serif]">Dirección</h3>
+              <div className="space-y-4">
+                <div>
+                  {addressEditMode ? (
+                    <TextField
+                      label="Ciudad"
+                      value={editedUserData?.address?.city}
+                      onChange={(e) => handleAddressDataChange('city', e.target.value)}
+                      fullWidth
+                      className="bg-gray-50 rounded"
+                      size="small"
+                    />
+                  ) : (
+                    <div className="text-gray-200">
+                      <span className="font-medium">Ciudad:</span>{" "}
+                      {userData?.address?.city ? (
+                        userData?.address?.city
+                      ) : (
+                        <span className="text-gray-500">No hay datos</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {addressEditMode ? (
+                    <TextField
+                      label="País"
+                      value={editedUserData?.address?.country}
+                      onChange={(e) => handleAddressDataChange('country', e.target.value)}
+                      fullWidth
+                      className="bg-gray-50 rounded"
+                      size="small"
+                    />
+                  ) : (
+                    <div className="text-gray-200">
+                      <span className="font-medium">País:</span>{" "}
+                      {userData?.address?.country ? (
+                        userData?.address?.country
+                      ) : (
+                        <span className="text-gray-500">No hay datos</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {addressEditMode ? (
+                    <TextField
+                      label="Código postal"
+                      value={editedUserData?.address?.postalCode}
+                      onChange={(e) => handleAddressDataChange('postalCode', e.target.value)}
+                      fullWidth
+                      className="bg-gray-50 rounded"
+                      size="small"
+                    />
+                  ) : (
+                    <div className="text-gray-200">
+                      <span className="font-medium">Código postal:</span>{" "}
+                      {userData?.address?.postalCode ? (
+                        userData?.address?.postalCode
+                      ) : (
+                        <span className="text-gray-500">No hay datos</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {addressEditMode ? (
+                    <TextField
+                      label="Estado"
+                      value={editedUserData?.address?.state}
+                      onChange={(e) => handleAddressDataChange('state', e.target.value)}
+                      fullWidth
+                      className="bg-gray-50 rounded"
+                      size="small"
+                    />
+                  ) : (
+                    <div className="text-gray-200">
+                      <span className="font-medium">Provincia:</span>{" "}
+                      {userData?.address?.state ? (
+                        userData?.address?.state
+                      ) : (
+                        <span className="text-gray-500">No hay datos</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {addressEditMode ? (
+                    <TextField
+                      label="Dirección"
+                      value={editedUserData?.address?.streetAddress}
+                      onChange={(e) => handleAddressDataChange('streetAddress', e.target.value)}
+                      fullWidth
+                      className="bg-gray-50 rounded"
+                      size="small"
+                    />
+                  ) : (
+                    <div className="text-gray-200">
+                      <span className="font-medium">Dirección:</span>{" "}
+                      {userData?.address?.streetAddress ? (
+                        userData?.address?.streetAddress
+                      ) : (
+                        <span className="text-gray-500">No hay datos</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <Divider className="my-6" />
+              {addressEditMode ? (
+                <div className="flex gap-4 justify-end mt-4">
+                  <Button variant="contained" onClick={handlePersonalInfoSubmit} className="bg-blue-600 font-bold">Aceptar</Button>
+                  <Button variant="outlined" onClick={handleAddressDataCancelEdit}>Cancelar</Button>
+                </div>
+              ) : (
+                <div className="flex justify-center mt-4">
+                  <Button variant="contained" onClick={handleAddressDataEdit} className="bg-blue-600 font-bold">Editar</Button>
+                </div>
+              )}
+            </div>
             {/* CREDIT CARD */}
-            <Grid item xs={12} sm={12}>
-              <Grid item xs={12} sm={12} paddingY={2}>
-                <Typography variant="h6"> Tarjeta de crédito </Typography>
-              </Grid>
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-white font-['Roboto_Slab','Roboto',sans-serif]">Tarjeta de crédito</h3>
               {!creditCardEditMode ? (
-                <Grid item xs={12} spacing={2}>
+                <div className="space-y-4">
                   {userData?.creditCard?.length > 0 ? (
                     userData?.creditCard?.map((card: CreditCard, index: number) => (
-                      <Grid item xs={12} key={index}>
-                        <Typography variant="h5" paddingY={1}>
-                          Credit Card {index + 1}:
-                        </Typography>
-                        <Typography padding={1}>
-                          Card Number: {card.cardNumber || 'No hay datos'}
-                        </Typography>
-                        <Typography padding={1}>
-                          Card Holder Name: {card.cardHolderName || 'No hay datos'}
-                        </Typography>
-                        <Typography padding={1}>
-                          Expiration Date: {card.expirationDate || 'No hay datos'}
-                        </Typography>
-                        <Typography padding={1}>
-                          CVV: {card.cvv || 'No hay datos'}
-                        </Typography>
-                        <Typography padding={1}>
-                          Billing Address: {card.billingAddress || 'No hay datos'}
-                        </Typography>
-                        <Divider />
-                      </Grid>
+                      <div key={index} className="bg-gray-50 rounded-lg p-4 shadow mb-2">
+                        <div className="font-semibold text-lg mb-2 font-['Roboto_Slab','Roboto',sans-serif]">Tarjeta {index + 1}:</div>
+                        <div className="text-gray-700">Número: {card.cardNumber ? card.cardNumber : <span className="text-gray-500">No hay datos</span>}</div>
+                        <div className="text-gray-700">Titular: {card.cardHolderName ? card.cardHolderName : <span className="text-gray-500">No hay datos</span>}</div>
+                        <div className="text-gray-700">Fecha de expiración: {card.expirationDate ? card.expirationDate : <span className="text-gray-500">No hay datos</span>}</div>
+                        <div className="text-gray-700">CVV: {card.cvv ? card.cvv : <span className="text-gray-500">No hay datos</span>}</div>
+                        <div className="text-gray-700">Dirección de facturación: {card.billingAddress ? card.billingAddress : <span className="text-gray-500">No hay datos</span>}</div>
+                      </div>
                     ))
                   ) : (
-                    <Grid item xs={12} sm={12} paddingY={2}>
-                      <Typography>No hay datos de tarjetas de crédito</Typography>
-                    </Grid>
+                    <div className="text-gray-500">No hay datos de tarjetas de crédito</div>
                   )}
-                </Grid>
+                </div>
               ) : (
-                <>
-                  <Grid item xs={12} paddingY={1}>
-                    <TextField
-                      label="Dirección de facturación"
-                      value={editedCreditCardData.billingAddress}
-                      onChange={(e) => handleCreditCardDataChange('billingAddress', e.target.value)}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} paddingY={1}>
-                    <TextField
-                      label="Nombre del propietario"
-                      value={editedCreditCardData.cardHolderName}
-                      onChange={(e) => handleCreditCardDataChange('cardHolderName', e.target.value)}
-                      fullWidth />
-                  </Grid>
-                  <Grid item xs={12} paddingY={1}>
-                    <TextField
-                      label="Número de la tarjeta"
-                      value={editedCreditCardData.cardNumber}
-                      onChange={(e) => handleCreditCardDataChange('cardNumber', e.target.value)}
-                      fullWidth />
-                  </Grid>
-                  <Grid item xs={12} paddingY={1}>
-                    <TextField
-                      label="CVV"
-                      value={editedCreditCardData.cvv}
-                      onChange={(e) => handleCreditCardDataChange('cvv', e.target.value)}
-                      fullWidth />
-                  </Grid>
-                  <Grid item xs={12} paddingY={1}>
-                    <TextField
-                      type='date'
-                      label="Fecha de expiración"
-                      value={editedCreditCardData.expirationDate}
-                      onChange={(e) => handleCreditCardDataChange('expirationDate', e.target.value)}
-                      fullWidth />
-                  </Grid>
-                </>
+                <div className="space-y-4">
+                  <TextField
+                    label="Dirección de facturación"
+                    value={editedCreditCardData.billingAddress}
+                    onChange={(e) => handleCreditCardDataChange('billingAddress', e.target.value)}
+                    fullWidth
+                    className="bg-gray-50 rounded"
+                    size="small"
+                  />
+                  <TextField
+                    label="Nombre del titular"
+                    value={editedCreditCardData.cardHolderName}
+                    onChange={(e) => handleCreditCardDataChange('cardHolderName', e.target.value)}
+                    fullWidth
+                    className="bg-gray-50 rounded"
+                    size="small"
+                  />
+                  <TextField
+                    label="Número de la tarjeta"
+                    value={editedCreditCardData.cardNumber}
+                    onChange={(e) => handleCreditCardDataChange('cardNumber', e.target.value)}
+                    fullWidth
+                    className="bg-gray-50 rounded"
+                    size="small"
+                  />
+                  <TextField
+                    label="CVV"
+                    value={editedCreditCardData.cvv}
+                    onChange={(e) => handleCreditCardDataChange('cvv', e.target.value)}
+                    fullWidth
+                    className="bg-gray-50 rounded"
+                    size="small"
+                  />
+                  <TextField
+                    type="date"
+                    label="Fecha de expiración"
+                    value={editedCreditCardData.expirationDate}
+                    onChange={(e) => handleCreditCardDataChange('expirationDate', e.target.value)}
+                    fullWidth
+                    className="bg-gray-50 rounded"
+                    size="small"
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </div>
               )}
-            </Grid>
-            {creditCardEditMode ? (
-              <Grid container justifyContent="space-between" padding={2}>
-                <Grid item>
-                  <Button variant="contained" onClick={handleCreditCardSubmit}>Aceptar</Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="contained" onClick={handleCreditCardCancelEdit}>Cancelar</Button>
-                </Grid>
-              </Grid>
+              {creditCardEditMode ? (
+                <div className="flex gap-4 justify-end mt-4">
+                  <Button variant="contained" onClick={handleCreditCardSubmit} className="bg-blue-600 font-bold">Aceptar</Button>
+                  <Button variant="outlined" onClick={handleCreditCardCancelEdit}>Cancelar</Button>
+                </div>
+              ) : (
+                <div className="flex justify-center mt-4">
+                  <Button variant="contained" onClick={handleCreditCardEdit} className="bg-blue-600 font-bold">Añadir</Button>
+                </div>
+              )}
+            </div>
+          </div>
+          {/* Purchases Card */}
+          <div className="bg-[#18181b] rounded-2xl shadow-lg p-8 flex-1 min-w-0 border border-gray-700">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-8 text-white font-['Roboto_Slab','Roboto',sans-serif] tracking-tight">
+              Mis compras
+            </h2>
+            <div className="space-y-6">
+              {currentItems.map((sale, index) => (
+                <div key={index} className="mb-4">
+                  <div className="text-xl font-semibold mb-2 text-white font-['Roboto_Slab','Roboto',sans-serif]">
+                    COMPRA: {new Date(sale.saleDate).toLocaleDateString()}
+                  </div>
+                  <div className="flex flex-wrap gap-4">
+                    {sale?.saleDetail?.map((saleDetail, detailIndex) => (
+                      <div
+                        key={detailIndex}
+                        className="border border-gray-700 rounded-lg p-4 min-w-[200px] flex-1 bg-neutral-700"
+                      >
+                        <div className="font-semibold text-white">{saleDetail.gameName}</div>
+                        <div className="text-gray-300 text-sm">Cantidad: {saleDetail.quantity}</div>
+                        <div className="text-gray-300 text-sm">Precio unitario: {saleDetail.unitPrice}</div>
+                        <div className="text-gray-300 text-sm">Subtotal: {saleDetail.subtotal}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <Divider className="my-4" />
+                </div>
+              ))}
+            </div>
+            {saleData.length > 0 ? (
+              <div className="flex justify-end gap-2 mt-6">
+                <Button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  className="bg-blue-600 font-bold"
+                >
+                  Anterior
+                </Button>
+                <Button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  className="bg-blue-600 font-bold"
+                >
+                  Siguiente
+                </Button>
+              </div>
             ) : (
-              <Grid container justifyContent="center" padding={3}>
-                <Grid item>
-                  <Button variant="contained" onClick={handleCreditCardEdit}> Añadir </Button>
-                </Grid>
-              </Grid>
+              <div className="flex justify-center mt-6">
+                <span className="text-red-400 font-semibold">No hay compras disponibles</span>
+              </div>
             )}
-          </Grid>
-        </Grid>
-        {/* COMPRAS */}
-        <Grid item xs={12} md={5} border={1} borderRadius={4} borderColor="grey.400" margin={2}>
-          <Typography variant="h2" align="center" margin={2}> Mis compras </Typography>
-          <Grid container padding={2}>
-            {currentItems.map((sale, index) => (
-              <Grid item xs={12} sm={12} key={index}>
-                <Typography variant='h4'> COMPRA: {new Date(sale.saleDate).toLocaleDateString()}</Typography>
-                <Grid container>
-                  {sale?.saleDetail?.map((saleDetail, detailIndex) => (
-                    <Grid item key={detailIndex} border={2} borderRadius={4} borderColor="grey.400" padding={2} margin={2}>
-                      <Typography variant="h6">
-                        {saleDetail.gameName}
-                      </Typography>
-                      <Typography variant="body2">
-                        Quantity: {saleDetail.quantity}
-                      </Typography>
-                      <Typography variant="body2">
-                        Unit Price: {saleDetail.unitPrice}
-                      </Typography>
-                      <Typography variant="body2">
-                        Subtotal: {saleDetail.subtotal}
-                      </Typography>
-                    </Grid>
-                  ))}
-                </Grid>
-                <Grid item padding={2}>
-                  <Divider />
-                </Grid>
-              </Grid>
-            ))}
-          </Grid>
-          {saleData.length > 0 ? (
-            <Grid item padding={3} display={'flex'} justifyContent={'flex-end'}>
-              <Button
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(currentPage - 1)}
-              >
-                Anterior
-              </Button>
-              <Button
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage(currentPage + 1)}
-              >
-                Siguiente
-              </Button>
-            </Grid>
-          ) : (
-            <Grid item padding={3} display={'flex'} justifyContent={'center'}>
-              <Typography color='error'> No hay compras disponibles</Typography>
-            </Grid>
-          )}
-        </Grid>
-      </Grid >
+          </div>
+        </div>
+      </div>
       <Footer />
     </>
   );
 }
-
 export default Profile;

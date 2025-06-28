@@ -25,7 +25,7 @@ function Home() {
   return (
     <>
       <Header />
-      <main style={{ background: 'rgb(41, 41, 41)' }}>
+      <main className="bg-neutral-800">
         <Grid item xs={12}>
           <Carousel></Carousel>
         </Grid>
