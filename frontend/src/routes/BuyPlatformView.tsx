@@ -272,9 +272,6 @@ const BuyPlatform = () => {
                             <span className="text-lg font-semibold text-white">Total:</span>
                             <span className="text-2xl font-bold text-yellow-400">€{getTotalPrice().toFixed(2)}</span>
                         </div>
-                        <div className="mt-8 text-center text-gray-400 text-sm">
-                            ¿Tienes un cupón? <span className="underline text-yellow-400 cursor-pointer">Añadir cupón</span>
-                        </div>
                     </div>
                 </div>
             </div>
