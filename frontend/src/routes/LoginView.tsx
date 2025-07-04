@@ -162,7 +162,7 @@ const LoginView: React.FC = () => {
           <Grid container sx={{ justifyContent: 'left' }}>
             <FormControlLabel
               control={<Checkbox checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} value="remember" color="primary" sx={{ color: theme.palette.primary.main }} />}
-              label="Remember me"
+              label="Recuérdeme"
               sx={{ color: theme.palette.primary.main }}
             />
           </Grid>

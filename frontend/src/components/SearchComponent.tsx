@@ -80,7 +80,7 @@ const SearchComponent: React.FC = () => {
                     color: '#333',
                     boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
                 }}
-                placeholder="Search games..."
+                placeholder="Introduce el nombre..."
                 style={{ width: '100%' }}
                 onChange={handleSearch}
                 value={query}
