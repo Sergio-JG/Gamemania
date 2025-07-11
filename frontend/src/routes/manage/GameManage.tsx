@@ -289,7 +289,7 @@ const GameManage: React.FC = () => {
                                         {game.genres.length > 0 ? (
                                             <TableCell onClick={() => handleOpenGenreDialog(game)}>géneros</TableCell>
                                         ) : (
-                                            <TableCell> No hay plataformas </TableCell>
+                                            <TableCell> No hay géneros </TableCell>
                                         )}
                                         {game.reviews && game.reviews?.length > 0 ? (
                                             <TableCell onClick={() => handleOpenReviewDialog(game)}>reseñas</TableCell>
