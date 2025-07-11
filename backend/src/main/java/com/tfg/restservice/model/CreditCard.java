@@ -1,13 +1,11 @@
 package com.tfg.restservice.model;
 
-import java.sql.Date;
 import java.util.UUID;
 
 import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,7 +36,7 @@ public class CreditCard {
 	@NonNull
 	private UUID creditCardId;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	@JsonBackReference
 	private User user;
@@ -50,7 +48,7 @@ public class CreditCard {
 	private String cardHolderName;
 
 	@Column(name = "expiration_date")
-	private Date expirationDate;
+	private String expirationDate;
 
 	@Column(name = "cvv")
 	private String cvv;

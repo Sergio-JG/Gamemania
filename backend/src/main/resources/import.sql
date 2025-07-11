@@ -24,13 +24,13 @@ INSERT INTO social (social_id, steam_url, twitch_url, youtube_url, discord_tag) 
 INSERT INTO social (social_id, steam_url, twitch_url, youtube_url, discord_tag) VALUES ('00000000-0000-0000-0000-000000000034', 'steam/david', 'twitch/david', 'youtube/david', 'David#5432');
 
 -- ADDRESSES
-INSERT INTO address (address_id, street_address, city, postal_code, country) VALUES ('00000000-0000-0000-0000-000000000040', 'Calle fake 1', 'Madrid', '28001', 'España');
-INSERT INTO address (address_id, street_address, city, postal_code, country) VALUES ('00000000-0000-0000-0000-000000000041', 'Calle fake 2', 'Madrid', '28002', 'España');
-INSERT INTO address (address_id, street_address, city, postal_code, country) VALUES ('00000000-0000-0000-0000-000000000042', 'Calle fake 3', 'Madrid', '28003', 'España');
-INSERT INTO address (address_id, street_address, city, postal_code, country) VALUES ('00000000-0000-0000-0000-000000000043', 'Calle fake 4', 'Madrid', '28004', 'España');
-INSERT INTO address (address_id, street_address, city, postal_code, country) VALUES ('00000000-0000-0000-0000-000000000044', 'Calle fake 5', 'Madrid', '28005', 'España');
-INSERT INTO address (address_id, street_address, city, postal_code, country) VALUES ('00000000-0000-0000-0000-000000000045', 'Calle fake 6', 'Madrid', '28006', 'España');
-
+INSERT INTO address (address_id, street, city, postal_code, country) VALUES ('00000000-0000-0000-0000-000000000040', 'Calle fake 1', 'Madrid', '28001', 'España');
+INSERT INTO address (address_id, street, city, postal_code, country) VALUES ('00000000-0000-0000-0000-000000000041', 'Calle fake 2', 'Madrid', '28002', 'España');
+INSERT INTO address (address_id, street, city, postal_code, country) VALUES ('00000000-0000-0000-0000-000000000042', 'Calle fake 3', 'Madrid', '28003', 'España');
+INSERT INTO address (address_id, street, city, postal_code, country) VALUES ('00000000-0000-0000-0000-000000000043', 'Calle fake 4', 'Madrid', '28004', 'España');
+INSERT INTO address (address_id, street, city, postal_code, country) VALUES ('00000000-0000-0000-0000-000000000044', 'Calle fake 5', 'Madrid', '28005', 'España');
+INSERT INTO address (address_id, street, city, postal_code, country) VALUES ('00000000-0000-0000-0000-000000000045', 'Calle fake 6', 'Madrid', '28006', 'España');
+INSERT INTO address (address_id, street, city, postal_code, country) VALUES ('00000000-0000-0000-0000-000000000046', 'Calle fake 7', 'Madrid', '28007', 'España');
 -- GAMES
 INSERT INTO game (game_id, title, price, description, image, release_date, number_of_sales, stock, total_score, discount, discounted_price) VALUES ('00000000-0000-0000-0000-000000000100', 'The Legend of Zelda: Breath of the Wild', 59.99, 'Explora Hyrule en mundo abierto.', 'TheLegendOfZeldaBreathOfTheWild.jpg', '2017-03-03', 15000000, 3000, 9.5, 0.10, 53.99);
 INSERT INTO game (game_id, title, price, description, image, release_date, number_of_sales, stock, total_score, discount, discounted_price) VALUES ('00000000-0000-0000-0000-000000000101', 'The Witcher 3: Wild Hunt', 39.99, 'Sé Geralt en este épico RPG.', 'TheWitcher3WildHunt.jpg', '2015-05-19', 10000000, 3000, 9.8, 0.20, 31.99);

@@ -85,23 +85,29 @@ public class CreditCardController {
 
 	@PostMapping("/creditCard")
 	public ResponseEntity<Object> addCreditCard(@RequestBody CreditCardDTO creditCardData) {
-
 		if (creditCardData.getCardNumber() == null) {
-			return ResponseEntity.status(HttpStatus.OK).body("No se ha realizado");
+			return ResponseEntity.ok("No se ha realizado");
 		}
 
-		CreditCard newCreditCard = new CreditCard();
+		if (creditCardData.getUserId() == null) {
+			return ResponseEntity.badRequest().body("El userId no puede ser null");
+		}
 
+		Optional<User> optionalUser = userRepository.findById(creditCardData.getUserId());
+
+		if (optionalUser.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+		}
+
+		User user = optionalUser.get();
+
+		CreditCard newCreditCard = new CreditCard();
+		newCreditCard.setUser(user);
 		newCreditCard.setCardNumber(creditCardData.getCardNumber());
 		newCreditCard.setCardHolderName(creditCardData.getCardHolderName());
 		newCreditCard.setExpirationDate(creditCardData.getExpirationDate());
 		newCreditCard.setCvv(creditCardData.getCvv());
 		newCreditCard.setBillingAddress(creditCardData.getBillingAddress());
-
-		Optional<User> optionalUser = userRepository.findById(creditCardData.getUserId());
-		User user = optionalUser.get();
-
-		newCreditCard.setUser(user);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(creditCardRepository.save(newCreditCard));
 	}

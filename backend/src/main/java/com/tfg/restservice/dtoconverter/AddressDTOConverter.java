@@ -21,6 +21,8 @@ public class AddressDTOConverter {
 	}
 
 	public Address convertToEntity(AddressDTO addressDTO) {
+		if (addressDTO == null)
+			return null;
 		return modelMapper.map(addressDTO, Address.class);
 	}
 

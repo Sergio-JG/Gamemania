@@ -19,7 +19,7 @@ public class AddressDTO {
 
 	private UUID addressId;
 
-	private String streetAddress;
+	private String street;
 
 	private String city;
 

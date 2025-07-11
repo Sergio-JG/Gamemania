@@ -82,7 +82,7 @@ export interface User {
     social: Social;
     role: Role;
     address: Address;
-    creditCard: CreditCard[];
+    creditCard: CreditCard;
 }
 
 export interface Social {
@@ -100,7 +100,7 @@ export interface Role {
 
 export interface Address {
     addressId: string;
-    streetAddress: string;
+    street: string;
     city: string;
     state?: string;
     postalCode: string;

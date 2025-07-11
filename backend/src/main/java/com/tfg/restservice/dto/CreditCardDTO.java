@@ -1,6 +1,5 @@
 package com.tfg.restservice.dto;
 
-import java.sql.Date;
 import java.util.UUID;
 
 import lombok.Getter;
@@ -17,7 +16,7 @@ public class CreditCardDTO {
 
 	private String cardHolderName;
 
-	private Date expirationDate;
+	private String expirationDate;
 
 	private String cvv;
 

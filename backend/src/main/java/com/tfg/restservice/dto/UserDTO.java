@@ -1,6 +1,5 @@
 package com.tfg.restservice.dto;
 
-import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -44,6 +43,6 @@ public class UserDTO {
 	private UUID addressId;
 	private AddressDTO address;
 
-	private List<CreditCardDTO> creditCard;
+	private CreditCardDTO creditCard;
 
 }

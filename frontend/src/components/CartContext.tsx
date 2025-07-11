@@ -137,7 +137,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                         height: '100vh',
                         maxHeight: '100vh',
                         overflowY: 'auto',
-                        borderLeft: 'solid 0.5px #bfa600', // darker yellow
+                        borderLeft: 'solid 0.5px #bfa600',
                         borderBottom: 'solid #bfa600',
                         borderBottomLeftRadius: 15,
                         p: 0,
@@ -145,10 +145,21 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 }}
             >
                 <div className="flex flex-col h-full w-full">
-                    <div className="flex flex-col items-center py-6 px-4 border-b border-[#bfa600]">
+                    <div className="flex flex-col items-center py-6 px-4 border-b border-[#bfa600] relative">
                         <span className="text-2xl sm:text-3xl font-bold text-[#bfa600] tracking-wide">
                             Mi cesta <span className="text-white">({cart.length})</span>
                         </span>
+                        <button
+                            className="absolute right-4 top-4 bg-transparent border-none p-1 rounded-full hover:bg-[#bfa600]/20 transition"
+                            onClick={toggleCart}
+                            aria-label="Cerrar"
+                            title="Cerrar"
+                        >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M6 6L18 18" stroke="#bfa600" strokeWidth="2" strokeLinecap="round" />
+                                <path d="M18 6L6 18" stroke="#bfa600" strokeWidth="2" strokeLinecap="round" />
+                            </svg>
+                        </button>
                     </div>
                     {cart.length > 0 ? (
                         <div className="flex-1 overflow-y-auto px-2 py-4">
@@ -232,7 +243,6 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         </CartContext.Provider>
     );
 }
-
 export const useCartContext = () => {
     return useContext(CartContext);
 };

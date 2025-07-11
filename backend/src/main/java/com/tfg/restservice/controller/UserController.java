@@ -28,6 +28,7 @@ import com.tfg.restservice.dtoconverter.SocialDTOConverter;
 import com.tfg.restservice.dtoconverter.UserDTOConverter;
 import com.tfg.restservice.error.NotFoundException;
 import com.tfg.restservice.model.CreditCard;
+import com.tfg.restservice.model.Social;
 import com.tfg.restservice.model.User;
 import com.tfg.restservice.repository.RoleRepository;
 import com.tfg.restservice.service.PasswordHashingService;
@@ -124,6 +125,7 @@ public class UserController {
 		user.setUsername(randomUsernameService.generateRandomUsername());
 		user.setFirstName(userData.getFirstName());
 		user.setLastName(userData.getLastName());
+		user.setSocial(new Social());
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
 	}
@@ -184,15 +186,10 @@ public class UserController {
 		existingUser.setSocial(socialDTOConverter.convertToEntity(userData.getSocial()));
 		existingUser.setAddress(addressDTOConverter.convertToEntity(userData.getAddress()));
 
-		List<CreditCardDTO> creditCards = userData.getCreditCard();
+		CreditCardDTO creditCard = userData.getCreditCard();
+		CreditCard card = creditCardDTOConverter.convertToEntity(creditCard);
 
-		for (CreditCardDTO cardDTO : creditCards) {
-			if (cardDTO != null) {
-				CreditCard card = creditCardDTOConverter.convertToEntity(cardDTO);
-				existingUser.getCreditCard().add(card);
-			}
-		}
-
+		existingUser.setCreditCard(card);
 		existingUser.setUserId(id);
 
 		User updatedUser = userService.save(existingUser);

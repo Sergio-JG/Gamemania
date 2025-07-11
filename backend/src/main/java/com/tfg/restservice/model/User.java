@@ -1,6 +1,5 @@
 package com.tfg.restservice.model;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.lang.NonNull;
@@ -16,7 +15,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -75,9 +73,9 @@ public class User {
 	@JsonManagedReference
 	private Address address;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
 	@JsonManagedReference
-	private List<CreditCard> creditCard;
+	private CreditCard creditCard;
 
 }

@@ -21,6 +21,8 @@ public class CreditCardDTOConverter {
 	}
 
 	public CreditCard convertToEntity(CreditCardDTO creditCardDTO) {
+		if (creditCardDTO == null)
+			return null;
 		return modelMapper.map(creditCardDTO, CreditCard.class);
 	}
 

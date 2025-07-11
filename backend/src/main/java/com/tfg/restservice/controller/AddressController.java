@@ -92,7 +92,7 @@ public class AddressController {
 
 		Address address = addressDTOConverter.convertToEntity(addressData);
 
-		addressData.setStreetAddress(addressData.getStreetAddress());
+		addressData.setStreet(addressData.getStreet());
 		addressData.setCity(addressData.getCity());
 		addressData.setState(addressData.getState());
 		addressData.setPostalCode(addressData.getPostalCode());
@@ -121,7 +121,7 @@ public class AddressController {
 
 		Address existingAddress = optionalAddress.get();
 
-		existingAddress.setStreetAddress(addressData.getStreetAddress());
+		existingAddress.setStreet(addressData.getStreet());
 		existingAddress.setCity(addressData.getCity());
 		existingAddress.setState(addressData.getState());
 		existingAddress.setPostalCode(addressData.getPostalCode());

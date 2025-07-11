@@ -2,8 +2,6 @@ package com.tfg.restservice.model;
 
 import java.util.UUID;
 
-import org.springframework.lang.NonNull;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
@@ -37,15 +35,14 @@ public class Address {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "address_id")
-	@NonNull
 	private UUID addressId;
 
 	@OneToOne(mappedBy = "address", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonBackReference
 	private User user;
 
-	@Column(name = "street_address")
-	private String streetAddress;
+	@Column(name = "street")
+	private String street;
 
 	@Column(name = "city")
 	private String city;

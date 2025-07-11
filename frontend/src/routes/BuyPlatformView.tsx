@@ -96,7 +96,7 @@ const BuyPlatform = () => {
                                     <>
                                         <div className="flex flex-wrap gap-4 items-center">
                                             <span className="font-semibold text-yellow-400">Calle:</span>
-                                            <span className="text-gray-200">{userData.address.streetAddress}</span>
+                                            <span className="text-gray-200">{userData.address.street}</span>
                                         </div>
                                         <div className="flex flex-wrap gap-4 items-center">
                                             <span className="font-semibold text-yellow-400">Ciudad:</span>
@@ -134,19 +134,19 @@ const BuyPlatform = () => {
                         <div className="mb-10">
                             <h3 className="text-xl font-semibold mb-4 text-white font-['Roboto_Slab','Roboto',sans-serif]">Tarjeta de crédito</h3>
                             <div className="bg-neutral-700  rounded-xl p-4 border border-yellow-300 mb-4 flex flex-col gap-2">
-                                {userData?.creditCard && userData.creditCard.length > 0 ? (
+                                {userData?.creditCard ? (
                                     <>
                                         <div className="flex flex-wrap gap-4 items-center">
                                             <span className="font-semibold text-yellow-700">Número:</span>
-                                            <span className="text-gray-700">{maskCard(userData.creditCard[0].cardNumber)}</span>
+                                            <span className="text-gray-700">{maskCard(userData.creditCard.cardNumber)}</span>
                                         </div>
                                         <div className="flex flex-wrap gap-4 items-center">
                                             <span className="font-semibold text-yellow-700">Titular:</span>
-                                            <span className="text-gray-700">{userData.creditCard[0].cardHolderName}</span>
+                                            <span className="text-gray-700">{userData.creditCard.cardHolderName}</span>
                                         </div>
                                         <div className="flex flex-wrap gap-4 items-center">
                                             <span className="font-semibold text-yellow-700">Expira:</span>
-                                            <span className="text-gray-700">{userData.creditCard[0].expirationDate}</span>
+                                            <span className="text-gray-700">{userData.creditCard.expirationDate}</span>
                                         </div>
                                         <div className="flex flex-wrap gap-4 items-center">
                                             <span className="font-semibold text-yellow-700">CVV:</span>
@@ -154,7 +154,7 @@ const BuyPlatform = () => {
                                         </div>
                                         <div className="flex flex-wrap gap-4 items-center">
                                             <span className="font-semibold text-yellow-700">Dirección de facturación:</span>
-                                            <span className="text-gray-700">{userData.creditCard[0].billingAddress}</span>
+                                            <span className="text-gray-700">{userData.creditCard.billingAddress}</span>
                                         </div>
                                     </>
                                 ) : (
@@ -221,7 +221,7 @@ const BuyPlatform = () => {
                                     variant="contained"
                                     onClick={handleConfirmSale}
                                     disabled={
-                                        !userData?.creditCard?.length ||
+                                        !userData?.creditCard ||
                                         !userData?.address ||
                                         cart.length === 0
                                     }
@@ -230,7 +230,7 @@ const BuyPlatform = () => {
                                     Confirmar compra
                                 </Button>
                             </div>
-                            {(!userData?.creditCard?.length || !userData?.address) && (
+                            {(!userData?.creditCard || !userData?.address) && (
                                 <div className="text-red-400 text-center mt-2">
                                     Se necesita una tarjeta de crédito y una dirección de facturación para comprar.
                                     <Button

@@ -15,13 +15,15 @@ public class SocialDTOConverter {
 
 	private final ModelMapper modelMapper;
 
-	public SocialDTO convertToDto(Social customer) {
-		return modelMapper.map(customer, SocialDTO.class);
+	public SocialDTO convertToDto(Social social) {
+		return modelMapper.map(social, SocialDTO.class);
 
 	}
 
-	public Social convertToEntity(SocialDTO customerDTO) {
-		return modelMapper.map(customerDTO, Social.class);
+	public Social convertToEntity(SocialDTO socialDTO) {
+		if (socialDTO == null)
+			return null;
+		return modelMapper.map(socialDTO, Social.class);
 	}
 
 }
