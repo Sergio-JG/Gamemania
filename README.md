@@ -39,6 +39,13 @@ Login
 Perfil
 ![image](https://github.com/user-attachments/assets/85fc4775-7d71-4013-bac7-7d5a424c0fa8)
 
+Admin
+![image](https://github.com/user-attachments/assets/2f728c86-23de-42bf-b00d-3cda13b69ec7)
+
+
+
+
+
 
 
 
