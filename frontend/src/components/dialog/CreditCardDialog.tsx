@@ -8,23 +8,28 @@ type CreditCardDialogProps = {
 };
 
 const CreditCardDialog = ({ open, onClose, selectedUser }: CreditCardDialogProps) => {
+    const creditCard = selectedUser?.creditCard;
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle> Tarjeta de credito </DialogTitle>
+            <DialogTitle>Tarjeta de crédito</DialogTitle>
             <DialogContent>
-                {selectedUser && selectedUser.creditCard?.map((creditCard) => (
+                {creditCard ? (
                     <div key={creditCard.creditCardId}>
-                        <Typography variant="subtitle1">{creditCard.userId}</Typography>
-                        <Typography variant="subtitle1">{creditCard.billingAddress}</Typography>
-                        <Typography variant="subtitle1">{creditCard.cardHolderName}</Typography>
-                        <Typography variant="subtitle1">{creditCard.cardNumber}</Typography>
-                        <Typography variant="subtitle1">{creditCard.cvv}</Typography>
-                        <Typography variant="subtitle1">{creditCard.expirationDate}</Typography>
+                        <Typography variant="subtitle1">Usuario: {creditCard.userId}</Typography>
+                        <Typography variant="subtitle1">Dirección: {creditCard.billingAddress}</Typography>
+                        <Typography variant="subtitle1">Titular: {creditCard.cardHolderName}</Typography>
+                        <Typography variant="subtitle1">Número: {creditCard.cardNumber}</Typography>
+                        <Typography variant="subtitle1">CVV: {creditCard.cvv}</Typography>
+                        <Typography variant="subtitle1">Vencimiento: {creditCard.expirationDate}</Typography>
                     </div>
-                ))}
+                ) : (
+                    <Typography variant="body2">No se ha encontrado tarjeta de crédito.</Typography>
+                )}
             </DialogContent>
         </Dialog>
-    )
-}
-export default CreditCardDialog
+    );
+};
+
+export default CreditCardDialog;
+

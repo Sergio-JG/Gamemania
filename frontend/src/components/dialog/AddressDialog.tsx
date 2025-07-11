@@ -31,7 +31,7 @@ const AddressDialog: React.FC<AddressDialogProps> = React.memo(({ open, onClose,
                     <Typography variant="subtitle1" key={selectedUser.userId}> {selectedUser.address?.country} </Typography>
                     <Typography variant="subtitle1" key={selectedUser.userId}> {selectedUser.address?.postalCode} </Typography>
                     <Typography variant="subtitle1" key={selectedUser.userId}> {selectedUser.address?.state} </Typography>
-                    <Typography variant="subtitle1" key={selectedUser.userId}> {selectedUser.address?.streetAddress} </Typography>
+                    <Typography variant="subtitle1" key={selectedUser.userId}> {selectedUser.address?.street} </Typography>
                 </div>
             </DialogContent>
         </Dialog >
