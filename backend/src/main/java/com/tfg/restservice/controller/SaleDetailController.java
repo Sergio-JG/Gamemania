@@ -1,5 +1,6 @@
 package com.tfg.restservice.controller;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -16,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tfg.restservice.dto.SaleDetailDTO;
+import com.tfg.restservice.dtoconverter.SaleDetailDTOConverter;
 import com.tfg.restservice.error.NotFoundException;
 import com.tfg.restservice.model.SaleDetail;
 import com.tfg.restservice.repository.SaleDetailRepository;
 import com.tfg.restservice.service.DateService;
+import com.tfg.restservice.service.GameService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,10 +32,13 @@ import lombok.RequiredArgsConstructor;
 public class SaleDetailController {
 
 	private final SaleDetailRepository saleDetailService;
+	private final SaleDetailDTOConverter saleDetailDTOConverter;
+
 	private final DateService dateService;
+	private final GameService gameService;
 
 	/**
-	 * Obtenemos todos los saleos
+	 * Obtenemos todos las ventas
 	 *
 	 * @return
 	 */
@@ -96,11 +102,15 @@ public class SaleDetailController {
 	 */
 
 	@PostMapping("/saledetail")
-	public ResponseEntity<SaleDetail> newSaleDetail(@RequestBody SaleDetail newG) {
+	public ResponseEntity<SaleDetailDTO> newSaleDetail(@RequestBody SaleDetailDTO dto) {
 
-		SaleDetail newSaleDetail = new SaleDetail();
+		SaleDetail newDetail = saleDetailDTOConverter.convertToEntity(dto);
+		newDetail.setGame(gameService.findById(dto.getGameId()));
+		newDetail.setSubtotal(dto.getUnitPrice().multiply(BigDecimal.valueOf(dto.getQuantity())));
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(saleDetailService.save(newSaleDetail));
+		SaleDetail saved = saleDetailService.save(newDetail);
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(saleDetailDTOConverter.convertToDto(saved));
 	}
 
 	/**
@@ -111,7 +121,7 @@ public class SaleDetailController {
 	 */
 
 	@PutMapping("/saledetail/{id}")
-	public SaleDetail editarSaleDetailo(@RequestBody SaleDetailDTO editar, @PathVariable UUID id) {
+	public SaleDetail editarSaleDetail(@RequestBody SaleDetailDTO editar, @PathVariable UUID id) {
 
 		return saleDetailService.findById(id).map(p -> {
 
@@ -129,7 +139,7 @@ public class SaleDetailController {
 	 */
 
 	@DeleteMapping("/saledetail/{id}")
-	public ResponseEntity<Object> borrarSaleDetailo(@PathVariable UUID id) {
+	public ResponseEntity<Object> borrarSaleDetail(@PathVariable UUID id) {
 		SaleDetail sale = saleDetailService.findById(id).orElseThrow(() -> new NotFoundException(id));
 
 		saleDetailService.delete(sale);

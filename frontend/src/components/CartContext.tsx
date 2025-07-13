@@ -85,7 +85,6 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const getDiscountedPrice = () => {
-        console.log(cart);
         return cart.reduce((acc, item) => acc + item.discountedPrice, 0);
     };
 

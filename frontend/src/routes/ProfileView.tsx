@@ -25,12 +25,11 @@ const Profile: React.FC = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = saleData.slice(indexOfFirstItem, indexOfLastItem);
 
-  // FETCH DATA
   const fetchUserData = async () => {
     try {
       const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || '';
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/${userId}`);
-      const result = response.data[0];
+      const result = response.data;
       setUserData(result);
     } catch (error) {
       console.error('ERROR fetching personal info:', error);

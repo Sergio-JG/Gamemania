@@ -1,6 +1,7 @@
 package com.tfg.restservice.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,10 +14,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tfg.restservice.dto.SaleCreateDTO;
 import com.tfg.restservice.dto.SaleDTO;
+import com.tfg.restservice.dto.SaleDetailDTO;
 import com.tfg.restservice.dtoconverter.SaleDTOConverter;
+import com.tfg.restservice.model.Game;
 import com.tfg.restservice.model.Sale;
 import com.tfg.restservice.model.SaleDetail;
+import com.tfg.restservice.model.User;
 import com.tfg.restservice.service.GameService;
 import com.tfg.restservice.service.SaleService;
 import com.tfg.restservice.service.UserService;
@@ -54,34 +59,60 @@ public class SaleController {
 	@GetMapping("/sale/byUser/{userId}")
 	public ResponseEntity<List<SaleDTO>> getSalesByUserId(@PathVariable UUID userId) {
 		List<Sale> result = saleService.findByUserUserId(userId);
-		if (result.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
 		List<SaleDTO> dtoList = result.stream().map(saleDTOConverter::convertToDto).toList();
 		return ResponseEntity.ok(dtoList);
 	}
 
 	@PostMapping("/sale")
-	public ResponseEntity<SaleDTO> addSale(@RequestBody SaleDTO saleDTO) {
+	public ResponseEntity<?> addSale(@RequestBody SaleCreateDTO saleCreateDTO) {
 
-		Sale newSale = saleDTOConverter.convertToEntity(saleDTO);
-		newSale.setUser(userService.findById(saleDTO.getUserId()));
+		Sale newSale = new Sale();
+
+		newSale.setSaleDate(saleCreateDTO.getSaleDate());
+
+		User user = userService.findById(saleCreateDTO.getUserId());
+
+		if (user == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("User not found with ID: " + saleCreateDTO.getUserId());
+		} else {
+			newSale.setUser(user);
+		}
+
+		newSale.setUser(user);
+		newSale.setSaleDate(saleCreateDTO.getSaleDate());
 
 		BigDecimal totalAmount = BigDecimal.ZERO;
 
-		for (SaleDetail detail : newSale.getSaleDetail()) {
+		List<SaleDetail> details = new ArrayList<>();
+		newSale.setSaleDetail(details);
+
+		for (SaleDetailDTO detailDTO : saleCreateDTO.getSaleDetail()) {
+			Game game = gameService.findById(detailDTO.getGameId());
+
+			if (game == null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body(null);
+			}
+
+			SaleDetail detail = new SaleDetail();
 			detail.setSale(newSale);
-			detail.setGame(gameService.findById(detail.getGame().getGameId()));
-			BigDecimal subtotal = detail.getSubtotal().multiply(BigDecimal.valueOf(detail.getQuantity()));
+			detail.setGame(game);
+			detail.setQuantity(detailDTO.getQuantity());
+
+			BigDecimal subtotal = game.getPrice().multiply(BigDecimal.valueOf(detail.getQuantity()));
 			detail.setSubtotal(subtotal);
+
+			details.add(detail);
 			totalAmount = totalAmount.add(subtotal);
 		}
 
-		newSale.setTotalAmount(totalAmount);
-		newSale = saleService.save(newSale);
+		newSale.setSaleDetail(details);
 
-		SaleDTO createdSaleDTO = saleDTOConverter.convertToDto(newSale);
-		return ResponseEntity.status(HttpStatus.CREATED).body(createdSaleDTO);
+		newSale.setTotalAmount(totalAmount);
+		Sale savedSale = saleService.save(newSale);
+		SaleDTO createdDTO = saleDTOConverter.convertToDto(savedSale);
+		return ResponseEntity.status(HttpStatus.CREATED).body(createdDTO);
 	}
 
 	@DeleteMapping("/sale/{id}")

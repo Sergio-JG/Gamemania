@@ -2,45 +2,22 @@ package com.tfg.restservice.controller;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.tfg.restservice.dto.CreditCardDTO;
 import com.tfg.restservice.dto.UserDTO;
-import com.tfg.restservice.dtoconverter.AddressDTOConverter;
-import com.tfg.restservice.dtoconverter.CreditCardDTOConverter;
-import com.tfg.restservice.dtoconverter.SocialDTOConverter;
-import com.tfg.restservice.dtoconverter.UserDTOConverter;
-import com.tfg.restservice.error.NotFoundException;
-import com.tfg.restservice.model.CreditCard;
-import com.tfg.restservice.model.Social;
-import com.tfg.restservice.model.User;
+import com.tfg.restservice.dtoconverter.*;
+import com.tfg.restservice.model.*;
 import com.tfg.restservice.repository.RoleRepository;
-import com.tfg.restservice.service.PasswordHashingService;
-import com.tfg.restservice.service.RandomUsernameService;
-import com.tfg.restservice.service.TokenService;
-import com.tfg.restservice.service.UserService;
+import com.tfg.restservice.service.*;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-
 public class UserController {
 
 	private final UserDTOConverter userDTOConverter;
@@ -56,95 +33,57 @@ public class UserController {
 
 	private final RoleRepository roleRepository;
 
-	/**
-	 * Obtain all user
-	 *
-	 * @return
-	 */
-
 	@GetMapping("/user")
 	public ResponseEntity<Object> obtainAll() {
-
 		List<User> result = userService.findAll();
 
 		if (result.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Data not found");
-		} else {
-
-			List<UserDTO> dtoList = result.stream().map(userDTOConverter::convertToDto).collect(Collectors.toList());
-			return ResponseEntity.ok(dtoList);
 		}
-	}
 
-	/**
-	 * Obtain user via ID
-	 *
-	 * @param id
-	 * @return Null if not found
-	 *
-	 */
+		List<UserDTO> dtoList = result.stream().map(userDTOConverter::convertToDto).toList();
+		return ResponseEntity.ok(dtoList);
+	}
 
 	@GetMapping("/user/{id}")
 	public ResponseEntity<Object> obtainOne(@PathVariable UUID id) {
+		User user = userService.findById(id);
 
-		Optional<User> result = Optional.of(userService.findById(id));
-
-		if (result.isEmpty()) {
-			NotFoundException exception = new NotFoundException(id);
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-		} else {
-
-			List<UserDTO> dtoList = result.stream().map(userDTOConverter::convertToDto).collect(Collectors.toList());
-
-			return ResponseEntity.ok(dtoList);
+		if (user == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with ID: " + id);
 		}
-	}
 
-	/**
-	 * Insert User
-	 *
-	 * @param New
-	 * @return New User inserted
-	 */
+		UserDTO dto = userDTOConverter.convertToDto(user);
+		return ResponseEntity.ok(dto);
+	}
 
 	@PostMapping("/user")
 	public ResponseEntity<Object> newUser(@RequestBody UserDTO userData) {
-
 		User user = userDTOConverter.convertToEntity(userData);
 
-		String hashedPassword = "FAIL";
-
 		try {
-			hashedPassword = passwordHashingService.hashPassword(user.getPassword());
+			String hashedPassword = passwordHashingService.hashPassword(user.getPassword());
+			user.setPassword(hashedPassword);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-			String errorMessage = "Error occurred while hashing the password: " + e.getMessage();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error hashing password: " + e.getMessage());
 		}
 
-		user.setPassword(hashedPassword);
 		user.setUsername(randomUsernameService.generateRandomUsername());
-		user.setFirstName(userData.getFirstName());
-		user.setLastName(userData.getLastName());
 		user.setSocial(new Social());
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
+		User savedUser = userService.save(user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
 	}
-
-	/**
-	 *
-	 * @param editar
-	 * @param id
-	 * @return
-	 * @throws InvalidKeySpecException
-	 * @throws NoSuchAlgorithmException
-	 */
 
 	@PutMapping("/user/{id}")
 	public ResponseEntity<Object> editUser(@RequestBody UserDTO userData, @PathVariable UUID id)
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
 
-		Optional<User> optionalUser = Optional.of(userService.findById(id));
-		User existingUser = optionalUser.get();
+		User existingUser = userService.findById(id);
+		if (existingUser == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+		}
 
 		existingUser.setFirstName(userData.getFirstName());
 		existingUser.setLastName(userData.getLastName());
@@ -154,12 +93,12 @@ public class UserController {
 		existingUser.setProfilePic(userData.getProfilePic());
 
 		if (userData.getPassword() != null) {
-			existingUser.setPassword(userData.getPassword());
+			String hashedPassword = passwordHashingService.hashPassword(userData.getPassword());
+			existingUser.setPassword(hashedPassword);
 		}
 
 		existingUser.setSocial(socialDTOConverter.convertToEntity(userData.getSocial()));
 		existingUser.setAddress(addressDTOConverter.convertToEntity(userData.getAddress()));
-		existingUser.setUserId(id);
 
 		User updatedUser = userService.save(existingUser);
 		return ResponseEntity.ok(updatedUser);
@@ -168,145 +107,113 @@ public class UserController {
 	@PatchMapping("/user/{id}")
 	public ResponseEntity<Object> patchUser(@RequestBody UserDTO userData, @PathVariable UUID id)
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
-		Optional<User> optionalUser = Optional.of(userService.findById(id));
 
-		if (optionalUser.isEmpty()) {
-			return ResponseEntity.notFound().build();
+		User existingUser = userService.findById(id);
+		if (existingUser == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 		}
 
-		User existingUser = optionalUser.get();
-
-		existingUser.setFirstName(userData.getFirstName());
-		existingUser.setLastName(userData.getLastName());
-		existingUser.setEmail(userData.getEmail());
-		existingUser.setUsername(userData.getUsername());
-		existingUser.setPhone(userData.getPhone());
-		existingUser.setProfilePic(userData.getProfilePic());
-
-		existingUser.setSocial(socialDTOConverter.convertToEntity(userData.getSocial()));
-		existingUser.setAddress(addressDTOConverter.convertToEntity(userData.getAddress()));
-
-		CreditCardDTO creditCard = userData.getCreditCard();
-		CreditCard card = creditCardDTOConverter.convertToEntity(creditCard);
-
-		existingUser.setCreditCard(card);
-		existingUser.setUserId(id);
+		if (userData.getFirstName() != null)
+			existingUser.setFirstName(userData.getFirstName());
+		if (userData.getLastName() != null)
+			existingUser.setLastName(userData.getLastName());
+		if (userData.getEmail() != null)
+			existingUser.setEmail(userData.getEmail());
+		if (userData.getUsername() != null)
+			existingUser.setUsername(userData.getUsername());
+		if (userData.getPhone() != null)
+			existingUser.setPhone(userData.getPhone());
+		if (userData.getProfilePic() != null)
+			existingUser.setProfilePic(userData.getProfilePic());
+		if (userData.getSocial() != null)
+			existingUser.setSocial(socialDTOConverter.convertToEntity(userData.getSocial()));
+		if (userData.getAddress() != null)
+			existingUser.setAddress(addressDTOConverter.convertToEntity(userData.getAddress()));
+		if (userData.getCreditCard() != null)
+			existingUser.setCreditCard(creditCardDTOConverter.convertToEntity(userData.getCreditCard()));
 
 		User updatedUser = userService.save(existingUser);
 		return ResponseEntity.ok(updatedUser);
 	}
 
-	/**
-	 *
-	 * Borra un usero del catálogo en base a su id
-	 *
-	 * @param id
-	 * @return
-	 *
-	 */
-
 	@DeleteMapping("/user/{id}")
 	public ResponseEntity<Object> deleteUser(@PathVariable UUID id) {
-
 		User user = userService.findById(id);
+		if (user == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+		}
 		userService.delete(user);
-
 		return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping("/user/login")
 	public ResponseEntity<Object> loginUser(@RequestBody Map<String, String> loginRequest)
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
+
 		String email = loginRequest.get("email");
 		String password = loginRequest.get("password");
 
-		if (password.equals("adminpass")) {
-
-			User user = userService.findByEmail(email);
-			UUID userId = user.getUserId();
-			String role = user.getRole().getName();
-			String token = tokenService.generateToken();
-
-			Map<String, Object> responseData = new HashMap<>();
-			responseData.put("token", token);
-			responseData.put("userId", userId);
-			responseData.put("role", role);
-
-			return ResponseEntity.ok().body(responseData);
-
-		} else {
-			if (email != null && password != null) {
-				boolean isValidUser = userService.validate(email, password);
-
-				if (isValidUser) {
-
-					User user = userService.findByEmail(email);
-					UUID userId = user.getUserId();
-					String role = user.getRole().getName();
-					String token = tokenService.generateToken();
-
-					Map<String, Object> responseData = new HashMap<>();
-					responseData.put("token", token);
-					responseData.put("userId", userId);
-					responseData.put("role", role);
-
-					return ResponseEntity.ok().body(responseData);
-				}
-			}
+		if (email == null || password == null) {
+			return ResponseEntity.badRequest().body("Email and password are required");
 		}
 
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+		User user = userService.findByEmail(email);
+		if (user == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+		}
 
+		boolean isValid = "adminpass".equals(password) || userService.validate(email, password);
+
+		if (!isValid) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+		}
+
+		Map<String, Object> responseData = new HashMap<>();
+		responseData.put("token", tokenService.generateToken());
+		responseData.put("userId", user.getUserId());
+		responseData.put("role", user.getRole().getName());
+
+		return ResponseEntity.ok(responseData);
 	}
 
 	@PostMapping("/user/register")
 	public ResponseEntity<Object> registerUser(@RequestBody Map<String, String> registerRequest)
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
 
+		String email = registerRequest.get("email");
 		String password = registerRequest.get("password");
-		String hashedPassword = "FAIL";
 
-		try {
-			hashedPassword = passwordHashingService.hashPassword(password);
-		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-			String errorMessage = "Error occurred while hashing the password: " + e.getMessage();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+		if (email == null || password == null) {
+			return ResponseEntity.badRequest().body("Email and password are required");
 		}
 
 		User user = new User();
-		user.setEmail(registerRequest.get("email"));
-		user.setPassword(hashedPassword);
+		user.setEmail(email);
 		user.setFirstName(registerRequest.get("firstName"));
 		user.setLastName(registerRequest.get("lastName"));
 		user.setUsername(randomUsernameService.generateRandomUsername());
 		user.setRole(roleRepository.findByName("User"));
 
-		User savedUser = userService.save(user);
+		try {
+			user.setPassword(passwordHashingService.hashPassword(password));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Password hashing error: " + e.getMessage());
+		}
 
+		User savedUser = userService.save(user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
 	}
 
-	/**
-	 * Obtain user via Email
-	 *
-	 * @param email
-	 * @return Null if not found
-	 *
-	 */
-
 	@GetMapping("/userByEmail/{email}")
 	public ResponseEntity<Object> obtainOneByEmail(@PathVariable String email) {
-		Optional<User> result = Optional.of(userService.findByEmail(email));
+		User user = userService.findByEmail(email);
 
-		if (result.isEmpty()) {
-			NotFoundException exception = new NotFoundException(email);
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-		} else {
-
-			List<UserDTO> dtoList = result.stream().map(userDTOConverter::convertToDto).collect(Collectors.toList());
-
-			return ResponseEntity.ok(dtoList);
+		if (user == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with email: " + email);
 		}
-	}
 
+		UserDTO dto = userDTOConverter.convertToDto(user);
+		return ResponseEntity.ok(dto);
+	}
 }

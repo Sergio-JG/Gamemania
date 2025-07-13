@@ -72,8 +72,18 @@ public class CreditCardController {
 			NotFoundException exception = new NotFoundException(id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
 		} else {
-			return ResponseEntity.ok(result);
+			return ResponseEntity.ok(creditCardDTOConverter.convertToDto(result.get()));
 		}
+	}
+
+	@GetMapping("/creditCard/user/{userId}")
+	public ResponseEntity<Object> getByUserId(@PathVariable UUID userId) {
+		Optional<CreditCard> creditCardOpt = creditCardRepository.findByUserUserId(userId);
+		if (creditCardOpt.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El usuario no tiene tarjeta");
+		}
+
+		return ResponseEntity.ok(creditCardDTOConverter.convertToDto(creditCardOpt.get()));
 	}
 
 	/**
@@ -126,27 +136,25 @@ public class CreditCardController {
 		Optional<CreditCard> result = creditCardRepository.findById(id);
 
 		if (result.isEmpty()) {
-
 			NotFoundException exception = new NotFoundException(id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-
-		} else {
-
-			CreditCard newCreditCard = new CreditCard();
-
-			newCreditCard.setCreditCardId(id);
-			newCreditCard.setCardNumber(creditCardData.getCardNumber());
-			newCreditCard.setCardHolderName(creditCardData.getCardHolderName());
-			newCreditCard.setExpirationDate(creditCardData.getExpirationDate());
-			newCreditCard.setCvv(creditCardData.getCvv());
-			newCreditCard.setBillingAddress(creditCardData.getBillingAddress());
-
-			User user = userRepository.findById(creditCardData.getCreditCardId()).orElse(null);
-			newCreditCard.setUser(user);
-
-			return ResponseEntity.status(HttpStatus.OK).body(creditCardRepository.save(newCreditCard));
-
 		}
+
+		Optional<User> optionalUser = userRepository.findById(creditCardData.getUserId());
+		if (optionalUser.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+		}
+
+		CreditCard existingCard = result.get();
+		existingCard.setCardNumber(creditCardData.getCardNumber());
+		existingCard.setCardHolderName(creditCardData.getCardHolderName());
+		existingCard.setExpirationDate(creditCardData.getExpirationDate());
+		existingCard.setCvv(creditCardData.getCvv());
+		existingCard.setBillingAddress(creditCardData.getBillingAddress());
+		existingCard.setUser(optionalUser.get());
+
+		CreditCard updatedCard = creditCardRepository.save(existingCard);
+		return ResponseEntity.ok(creditCardDTOConverter.convertToDto(updatedCard));
 	}
 
 	/**

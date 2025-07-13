@@ -1,7 +1,7 @@
 import { TextField, Divider, Button } from '@mui/material';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { User } from '../interfaces/GameInterface';
+import { CreditCard, User } from '../interfaces/GameInterface';
 
 interface Props {
     userData: User;
@@ -9,53 +9,39 @@ interface Props {
 }
 
 const CreditCardComponent: React.FC<Props> = ({ userData, fetchUserData }) => {
-    const [cardInfoEditMode, setCardInfoEditMode] = useState(false);
-    const [editedUserData, setEditedUserData] = useState<User>({
-        ...userData,
-        creditCard: { ...userData.creditCard }
-    });
 
+    const [cardInfoEditMode, setCardInfoEditMode] = useState(false);
+    const [creditCardData, setCreditCardData] = useState<CreditCard>({} as CreditCard);
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    const handleCardInfoEdit = () => setCardInfoEditMode(true);
-
-    const handleCardInfoCancelEdit = () => {
-        setCardInfoEditMode(false);
-        setEditedUserData({ ...userData });
-        setErrors({});
-    };
-
     const handleCardDataChange = (field: string, value: string) => {
-        setEditedUserData((prev) => ({
+        setCreditCardData((prev) => ({
             ...prev,
-            creditCard: {
-                ...prev.creditCard,
-                [field]: value,
-            },
+            [field]: value,
         }));
         setErrors((prev) => ({ ...prev, [field]: '' }));
+    };
+    const handleCardInfoEdit = () => setCardInfoEditMode(true);
+    const handleCardInfoCancelEdit = () => {
+        fetchCardData();
+        setCardInfoEditMode(false);
+        setErrors({});
     };
 
     const validate = (): boolean => {
         const newErrors: Record<string, string> = {};
-        const card = editedUserData.creditCard;
+        const card = creditCardData;
 
-        if (!card?.cardNumber || !/^\d{16}$/.test(card.cardNumber)) {
+        if (!card.cardNumber || !/^\d{16}$/.test(card.cardNumber)) {
             newErrors.cardNumber = "El número debe tener 16 dígitos";
         }
-
-        if (!card?.cardHolderName || card.cardHolderName.trim() === "") {
+        if (!card.cardHolderName?.trim()) {
             newErrors.cardHolderName = "El nombre del titular es obligatorio";
         }
-
-        if (
-            !card?.expirationDate ||
-            !/^(0[1-9]|1[0-2])\/\d{2}$/.test(card.expirationDate)
-        ) {
+        if (!card.expirationDate || !/^(0[1-9]|1[0-2])\/\d{2}$/.test(card.expirationDate)) {
             newErrors.expirationDate = "Formato inválido. Usa MM/YY";
         }
-
-        if (!card?.cvv || !/^\d{3,4}$/.test(card.cvv)) {
+        if (!card.cvv || !/^\d{3,4}$/.test(card.cvv)) {
             newErrors.cvv = "El CVV debe tener 3 o 4 dígitos";
         }
 
@@ -64,103 +50,72 @@ const CreditCardComponent: React.FC<Props> = ({ userData, fetchUserData }) => {
     };
 
     const handleCardInfoSubmit = async () => {
-
         if (!validate()) return;
         try {
-            console.log("Submitting credit card data:", editedUserData);
-            if (!editedUserData.creditCard?.creditCardId) {
-
-                const newCard = { ...editedUserData.creditCard };
-                editedUserData.creditCard.userId = userData.userId;
-
-                const postResponse = await axios.post(
-                    `${import.meta.env.VITE_API_URL}/creditCard`,
-                    newCard
+            if (creditCardData.creditCardId) {
+                await axios.put(
+                    `${import.meta.env.VITE_API_URL}/creditCard/${creditCardData.creditCardId}`,
+                    { ...creditCardData, userId: userData.userId }
                 );
-
-                const updatedUser = {
-                    ...editedUserData,
-                    creditCard: postResponse.data,
-                };
-
-                const putResponse = await axios.put(
-                    `${import.meta.env.VITE_API_URL}/user/${userData.userId}`,
-                    updatedUser
-                );
-
-                if (putResponse.status === 200) {
-                    setCardInfoEditMode(false);
-                    fetchUserData();
-                }
             } else {
-                const putResponse = await axios.put(
-                    `${import.meta.env.VITE_API_URL}/user/${userData.userId}`,
-                    editedUserData
-                );
-
-                if (putResponse.status === 200) {
-                    setCardInfoEditMode(false);
-                    fetchUserData();
-                }
+                await axios.post(`${import.meta.env.VITE_API_URL}/creditCard`, {
+                    ...creditCardData,
+                    userId: userData.userId,
+                });
             }
+
+            setCardInfoEditMode(false);
+            fetchCardData();
+            fetchUserData();
         } catch (error) {
-            console.error("Error updating credit card", error);
+            console.error("Error saving credit card:", error);
         }
     };
 
+    const fetchCardData = async () => {
+        try {
+            const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || '';
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/creditCard/user/${userId}`);
+            if (res.data) setCreditCardData(res.data);
+        } catch (error) {
+            console.error("Error fetching credit card data:", error);
+            setCreditCardData({} as CreditCard);
+        }
+    };
+
+
     useEffect(() => {
-        setEditedUserData({ ...userData });
-        setErrors({});
-    }, [userData]);
+        fetchCardData();
+        fetchUserData();
+    }, []);
 
     return (
         <div>
             <h3 className="text-xl font-semibold mb-4 text-white">Tarjeta de Crédito</h3>
             <div className="space-y-4 py-4">
                 {([
-                    {
-                        label: "Número de Tarjeta",
-                        field: "cardNumber",
-                        value: editedUserData?.creditCard?.cardNumber,
-                        display: userData?.creditCard?.cardNumber,
-                    },
-                    {
-                        label: "Titular",
-                        field: "cardHolderName",
-                        value: editedUserData?.creditCard?.cardHolderName,
-                        display: userData?.creditCard?.cardHolderName,
-                    },
-                    {
-                        label: "Fecha de Expiración",
-                        field: "expirationDate",
-                        value: editedUserData?.creditCard?.expirationDate,
-                        display: userData?.creditCard?.expirationDate,
-                    },
-                    {
-                        label: "CVV",
-                        field: "cvv",
-                        value: editedUserData?.creditCard?.cvv,
-                        display: userData?.creditCard?.cvv,
-                    },
-                ]).map(({ label, field, value, display }) => (
+                    { label: "Número de Tarjeta", field: "cardNumber" },
+                    { label: "Titular", field: "cardHolderName" },
+                    { label: "Fecha de Expiración", field: "expirationDate" },
+                    { label: "CVV", field: "cvv" },
+                    { label: "Dirección de Facturación", field: "billingAddress" },
+                ] as const).map(({ label, field }) => (
                     <div key={field}>
                         {cardInfoEditMode ? (
-                            <>
-                                <TextField
-                                    label={label}
-                                    value={value || ""}
-                                    onChange={(e) => handleCardDataChange(field, e.target.value)}
-                                    fullWidth
-                                    className="bg-gray-50 rounded"
-                                    size="small"
-                                    error={Boolean(errors[field])}
-                                    helperText={errors[field]}
-                                />
-                            </>
+                            <TextField
+                                label={label}
+                                value={creditCardData?.[field] || ""}
+                                onChange={(e) => handleCardDataChange(field, e.target.value)}
+                                fullWidth
+                                className="bg-gray-50 rounded"
+                                size="small"
+                                error={Boolean(errors[field])}
+                                helperText={errors[field]}
+                            />
                         ) : (
                             <div className="text-gray-200">
                                 <span className="font-medium">{label}:</span>{" "}
-                                {display ? display : <span className="text-gray-500">No hay datos</span>}
+                                {creditCardData?.[field] || <span className="text-gray-500">No hay datos</span>}
                             </div>
                         )}
                     </div>
