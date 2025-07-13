@@ -27,19 +27,23 @@
 
 ## 📸 Capturas de pantalla
 
-Página principal
+### Página principal
+
 ![image](https://github.com/user-attachments/assets/56c352cf-f6db-41f1-9ec1-aaed6e9d9f9d)
 
-Videojuego en detalle
+### Videojuego en detalle
+
 ![image](https://github.com/user-attachments/assets/9cf66d68-48fa-4a07-85b8-79911e071676)
 
-Login
+### Login
+
 ![image](https://github.com/user-attachments/assets/74294c6e-83b9-4c7e-9245-8c55cb10a176)
 
-Perfil
+### Perfil
+
 ![image](https://github.com/user-attachments/assets/85fc4775-7d71-4013-bac7-7d5a424c0fa8)
 
-Admin
+### Admin
 ![image](https://github.com/user-attachments/assets/c3660b5c-991a-4dfc-87a9-35d6f9de45f3)
 
 
