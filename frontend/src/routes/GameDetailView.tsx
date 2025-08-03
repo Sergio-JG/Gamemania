@@ -1,6 +1,6 @@
 import { Chip, Container, Divider, Grid, List, ListItem } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Footer from '../components/footer/Footer';
 import Header from '../components/header/Header';
 import { Game, Genre, Platform, Review } from '../interfaces/GameInterface';
@@ -43,13 +43,14 @@ const GameDetail = () => {
     Linux: "olive"
   };
 
-  const { id } = useParams();
+  const location = useLocation();
+  const { gameId } = location.state || {};
   const [game, setGame] = useState<Game>();
 
   useEffect(() => {
     const fetchGameDetails = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/game/${id}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/game/${gameId}`);
         setGame(response.data);
         console.log(response.data);
       } catch (error) {
@@ -57,7 +58,7 @@ const GameDetail = () => {
       }
     };
     fetchGameDetails();
-  }, [id]);
+  }, [gameId]);
 
   return (
     <>

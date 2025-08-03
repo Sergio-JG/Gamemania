@@ -29,7 +29,7 @@ function App() {
 
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />
-          <Route path='/game/:id' element={<GameDetailView />} />
+          <Route path="/:slug" element={<GameDetailView />} />
           <Route path='/register' element={<RegisterView />} />
           <Route path='/buyPlatform' element={<BuyPlatform />} />
           <Route path='/profile' element={<Profile />} />

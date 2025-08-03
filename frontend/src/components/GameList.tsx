@@ -39,6 +39,17 @@ const GameList = () => {
   const lastReleasedGames = useMemo(() => [...games].sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime()), [games]);
   const discountedGames = useMemo(() => games.filter(game => game.discount != 0), [games]);
 
+  const slugify = (text: string): string =>
+    text
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]+/g, "")
+      .replace(/--+/g, "-")
+      .replace(/^-+/, "")
+      .replace(/-+$/, "");
+
   const GameCard = ({
     game,
     showDiscount = false,
@@ -63,7 +74,7 @@ const GameList = () => {
           }}
         />
       )}
-      <Link to={`/game/${game.gameId}`}>
+      <Link to={`/${slugify(game.title)}`} state={{ gameId: game.gameId }}>
         <CardMedia
           style={{ borderRadius: 20 }}
           component="img"
