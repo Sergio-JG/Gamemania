@@ -36,13 +36,12 @@ public class CreditCardController {
 	private final CreditCardDTOConverter creditCardDTOConverter;
 
 	/**
-	 * Obtain all CreditCard
+	 * Retrieve all credit cards.
 	 *
-	 * @return
+	 * @return List of all credit cards or a not found message if empty.
 	 */
 
 	@GetMapping("/creditCard")
-
 	public ResponseEntity<Object> obtainAll() {
 
 		List<CreditCard> result = creditCardRepository.findAll();
@@ -57,11 +56,10 @@ public class CreditCardController {
 	}
 
 	/**
-	 * Obtain CreditCard via ID
+	 * Retrieve a single credit card by its ID.
 	 *
-	 * @param id
-	 * @return Null if not found
-	 *
+	 * @param id The UUID of the credit card.
+	 * @return The credit card DTO if found, otherwise a not found message.
 	 */
 
 	@GetMapping("/creditCard/{id}")
@@ -76,6 +74,13 @@ public class CreditCardController {
 		}
 	}
 
+	/**
+	 * Obtain a credit card by user ID.
+	 *
+	 * @param id The UUID of the user.
+	 * @return The credit card DTO if found, otherwise a not found message.
+	 */
+
 	@GetMapping("/creditCard/user/{userId}")
 	public ResponseEntity<Object> getByUserId(@PathVariable UUID userId) {
 		Optional<CreditCard> creditCardOpt = creditCardRepository.findByUserUserId(userId);
@@ -87,10 +92,11 @@ public class CreditCardController {
 	}
 
 	/**
-	 * Insert CreditCard
+	 * Create a new credit card.
 	 *
-	 * @param New
-	 * @return New CreditCard inserted
+	 * @param creditCardData The credit card data to create.
+	 * @return The created credit card DTO or a bad request message if user ID is
+	 *         null.
 	 */
 
 	@PostMapping("/creditCard")
@@ -123,10 +129,11 @@ public class CreditCardController {
 	}
 
 	/**
+	 * Update an existing credit card.
 	 *
-	 * @param editar
-	 * @param id
-	 * @return
+	 * @param creditCardData The updated credit card data.
+	 * @param id             The UUID of the credit card to update.
+	 * @return The updated credit card DTO if found, otherwise a not found message.
 	 */
 
 	@PutMapping("/creditCard/{id}")
@@ -158,12 +165,10 @@ public class CreditCardController {
 	}
 
 	/**
+	 * Delete a credit card by its ID.
 	 *
-	 * Borra un CreditCard del catálogo en base a su id
-	 *
-	 * @param id
-	 * @return
-	 *
+	 * @param id The UUID of the credit card to delete.
+	 * @return No content if deleted, otherwise a not found message.
 	 */
 
 	@DeleteMapping("/creditCard/{id}")

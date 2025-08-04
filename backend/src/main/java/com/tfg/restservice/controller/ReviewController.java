@@ -36,8 +36,9 @@ public class ReviewController {
 
 	private final UserRepository userRepository;
 	private final GameRepository gameRepository;
+
 	/**
-	 * Obtenemos todos los reviewos
+	 * Obtain all the reviews
 	 *
 	 * @return
 	 */
@@ -52,10 +53,10 @@ public class ReviewController {
 	}
 
 	/**
-	 * Obtenemos un reviewo en base a su ID
+	 * Obtain a review by its id
 	 *
 	 * @param id
-	 * @return Null si no encuentra el reviewo
+	 * @return
 	 */
 	@GetMapping("/review/{id}")
 	public ResponseEntity<Object> obtainOne(@PathVariable UUID id) {
@@ -73,10 +74,10 @@ public class ReviewController {
 	}
 
 	/**
-	 * Insertamos un nuevo reviewoX
+	 * Insert a new review
 	 *
 	 * @param nuevo
-	 * @return reviewo insertado
+	 * @return
 	 */
 
 	@PostMapping("/review")
@@ -122,7 +123,7 @@ public class ReviewController {
 
 	/**
 	 *
-	 * Borra un reviewo del catálogo en base a su id
+	 * Delete a review by its id
 	 *
 	 * @param id
 	 * @return
@@ -130,7 +131,7 @@ public class ReviewController {
 	 */
 
 	@DeleteMapping("/review/{id}")
-	public ResponseEntity<Object> borrarReviewo(@PathVariable UUID id) {
+	public ResponseEntity<Object> borrarReviews(@PathVariable UUID id) {
 		Review review = reviewRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
 
 		reviewRepository.delete(review);

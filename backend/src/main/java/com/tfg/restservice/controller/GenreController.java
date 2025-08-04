@@ -121,7 +121,7 @@ public class GenreController {
 
 	/**
 	 *
-	 * Borra un genreo del catálogo en base a su id
+	 * Delete a genre based on id
 	 *
 	 * @param id
 	 * @return

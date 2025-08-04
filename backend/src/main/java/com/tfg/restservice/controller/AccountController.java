@@ -32,9 +32,9 @@ public class AccountController {
 	private final AccountDTOConverter accountDTOConverter;
 
 	/**
-	 * Obtain all Account
+	 * Retrieve all accounts.
 	 *
-	 * @return
+	 * @return List of all accounts or a not found message if empty.
 	 */
 
 	@GetMapping("/account")
@@ -49,10 +49,10 @@ public class AccountController {
 	}
 
 	/**
-	 * Obtain Account via ID
+	 * Retrieve a single account by its ID.
 	 *
-	 * @param id
-	 * @return Null if not found
+	 * @param id The UUID of the account.
+	 * @return The account DTO if found, otherwise a not found message.
 	 */
 
 	@GetMapping("/account/{id}")
@@ -68,10 +68,10 @@ public class AccountController {
 	}
 
 	/**
-	 * Add a new Account
+	 * Create a new account.
 	 *
-	 * @param accountData
-	 * @return
+	 * @param accountData The account data to create.
+	 * @return The created account DTO.
 	 */
 
 	@PostMapping("/account")
@@ -82,15 +82,16 @@ public class AccountController {
 	}
 
 	/**
-	 * Edit an existing Account
+	 * Update an existing account.
 	 *
-	 * @param accountData
-	 * @param id
-	 * @return
+	 * @param accountData The updated account data.
+	 * @param id          The UUID of the account to update.
+	 * @return The updated account DTO if found, otherwise a not found message.
 	 */
 
 	@PutMapping("/account/{id}")
 	public ResponseEntity<Object> editAccount(@RequestBody AccountDTO accountData, @PathVariable @NonNull UUID id) {
+
 		Optional<Account> result = accountRepository.findById(id);
 		if (result.isEmpty()) {
 			NotFoundException exception = new NotFoundException(id);
@@ -104,10 +105,10 @@ public class AccountController {
 	}
 
 	/**
-	 * Delete an Account
+	 * Delete an account by its ID.
 	 *
-	 * @param id
-	 * @return
+	 * @param id The UUID of the account to delete.
+	 * @return No content if deleted, otherwise a not found message.
 	 */
 
 	@DeleteMapping("/account/{id}")

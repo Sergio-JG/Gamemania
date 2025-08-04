@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+
 public class UserController {
 
 	private final UserDTOConverter userDTOConverter;
@@ -33,29 +34,62 @@ public class UserController {
 
 	private final RoleRepository roleRepository;
 
+	/**
+	 * Retrieve all users.
+	 *
+	 * @return List of all users or a not found message if empty.
+	 */
+ç
 	@GetMapping("/user")
 	public ResponseEntity<Object> obtainAll() {
 		List<User> result = userService.findAll();
-
 		if (result.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Data not found");
 		}
-
 		List<UserDTO> dtoList = result.stream().map(userDTOConverter::convertToDto).toList();
 		return ResponseEntity.ok(dtoList);
 	}
 
+	/**
+	 * Retrieve a single user by its ID.
+	 *
+	 * @param id The UUID of the user.
+	 * @return The user DTO if found, otherwise a not found message.
+	 */
+
 	@GetMapping("/user/{id}")
 	public ResponseEntity<Object> obtainOne(@PathVariable UUID id) {
 		User user = userService.findById(id);
-
 		if (user == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with ID: " + id);
 		}
-
 		UserDTO dto = userDTOConverter.convertToDto(user);
 		return ResponseEntity.ok(dto);
 	}
+
+	/**
+	 * Retrieve a single user by its email.
+	 *
+	 * @param email The email of the user.
+	 * @return The user DTO if found, otherwise a not found message.
+	 */
+
+	@GetMapping("/userByEmail/{email}")
+	public ResponseEntity<Object> obtainOneByEmail(@PathVariable String email) {
+		User user = userService.findByEmail(email);
+		if (user == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with email: " + email);
+		}
+		UserDTO dto = userDTOConverter.convertToDto(user);
+		return ResponseEntity.ok(dto);
+	}
+
+	/**
+	 * Create a new user.
+	 *
+	 * @param userData The user data to create.
+	 * @return The created user.
+	 */
 
 	@PostMapping("/user")
 	public ResponseEntity<Object> newUser(@RequestBody UserDTO userData) {
@@ -75,6 +109,88 @@ public class UserController {
 		User savedUser = userService.save(user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
 	}
+
+	/**
+	 * Register a new user.
+	 *
+	 * @param registerRequest The registration data.
+	 * @return The created user.
+	 */
+
+	@PostMapping("/user/register")
+	public ResponseEntity<Object> registerUser(@RequestBody Map<String, String> registerRequest)
+			throws NoSuchAlgorithmException, InvalidKeySpecException {
+
+		String email = registerRequest.get("email");
+		String password = registerRequest.get("password");
+
+		if (email == null || password == null) {
+			return ResponseEntity.badRequest().body("Email and password are required");
+		}
+
+		User user = new User();
+		user.setEmail(email);
+		user.setFirstName(registerRequest.get("firstName"));
+		user.setLastName(registerRequest.get("lastName"));
+		user.setUsername(randomUsernameService.generateRandomUsername());
+		user.setRole(roleRepository.findByName("User"));
+
+		try {
+			user.setPassword(passwordHashingService.hashPassword(password));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Password hashing error: " + e.getMessage());
+		}
+
+		User savedUser = userService.save(user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+	}
+
+	/**
+	 * Authenticate a user and generate a token.
+	 *
+	 * @param loginRequest The login credentials.
+	 * @return The authentication token and user info if successful, otherwise an
+	 *         error message.
+	 */
+
+	@PostMapping("/user/login")
+	public ResponseEntity<Object> loginUser(@RequestBody Map<String, String> loginRequest)
+			throws NoSuchAlgorithmException, InvalidKeySpecException {
+
+		String email = loginRequest.get("email");
+		String password = loginRequest.get("password");
+
+		if (email == null || password == null) {
+			return ResponseEntity.badRequest().body("Email and password are required");
+		}
+
+		User user = userService.findByEmail(email);
+		if (user == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+		}
+
+		boolean isValid = "adminpass".equals(password) || userService.validate(email, password);
+
+		if (!isValid) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+		}
+
+		Map<String, Object> responseData = new HashMap<>();
+		responseData.put("token", tokenService.generateToken());
+		responseData.put("userId", user.getUserId());
+		responseData.put("role", user.getRole().getName());
+
+		return ResponseEntity.ok(responseData);
+	}
+
+	/**
+	 * Update an existing user.
+	 *
+	 * @param userData The updated user data.
+	 * @param id       The UUID of the user to update.
+	 * @return The updated user if found, otherwise a not found message.
+	 */
 
 	@PutMapping("/user/{id}")
 	public ResponseEntity<Object> editUser(@RequestBody UserDTO userData, @PathVariable UUID id)
@@ -103,6 +219,14 @@ public class UserController {
 		User updatedUser = userService.save(existingUser);
 		return ResponseEntity.ok(updatedUser);
 	}
+
+	/**
+	 * Partially update an existing user.
+	 *
+	 * @param userData The user data to update.
+	 * @param id       The UUID of the user to update.
+	 * @return The updated user if found, otherwise a not found message.
+	 */
 
 	@PatchMapping("/user/{id}")
 	public ResponseEntity<Object> patchUser(@RequestBody UserDTO userData, @PathVariable UUID id)
@@ -136,6 +260,13 @@ public class UserController {
 		return ResponseEntity.ok(updatedUser);
 	}
 
+	/**
+	 * Delete a user by its ID.
+	 *
+	 * @param id The UUID of the user to delete.
+	 * @return No content if deleted, otherwise a not found message.
+	 */
+
 	@DeleteMapping("/user/{id}")
 	public ResponseEntity<Object> deleteUser(@PathVariable UUID id) {
 		User user = userService.findById(id);
@@ -144,76 +275,5 @@ public class UserController {
 		}
 		userService.delete(user);
 		return ResponseEntity.noContent().build();
-	}
-
-	@PostMapping("/user/login")
-	public ResponseEntity<Object> loginUser(@RequestBody Map<String, String> loginRequest)
-			throws NoSuchAlgorithmException, InvalidKeySpecException {
-
-		String email = loginRequest.get("email");
-		String password = loginRequest.get("password");
-
-		if (email == null || password == null) {
-			return ResponseEntity.badRequest().body("Email and password are required");
-		}
-
-		User user = userService.findByEmail(email);
-		if (user == null) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
-		}
-
-		boolean isValid = "adminpass".equals(password) || userService.validate(email, password);
-
-		if (!isValid) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
-		}
-
-		Map<String, Object> responseData = new HashMap<>();
-		responseData.put("token", tokenService.generateToken());
-		responseData.put("userId", user.getUserId());
-		responseData.put("role", user.getRole().getName());
-
-		return ResponseEntity.ok(responseData);
-	}
-
-	@PostMapping("/user/register")
-	public ResponseEntity<Object> registerUser(@RequestBody Map<String, String> registerRequest)
-			throws NoSuchAlgorithmException, InvalidKeySpecException {
-
-		String email = registerRequest.get("email");
-		String password = registerRequest.get("password");
-
-		if (email == null || password == null) {
-			return ResponseEntity.badRequest().body("Email and password are required");
-		}
-
-		User user = new User();
-		user.setEmail(email);
-		user.setFirstName(registerRequest.get("firstName"));
-		user.setLastName(registerRequest.get("lastName"));
-		user.setUsername(randomUsernameService.generateRandomUsername());
-		user.setRole(roleRepository.findByName("User"));
-
-		try {
-			user.setPassword(passwordHashingService.hashPassword(password));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Password hashing error: " + e.getMessage());
-		}
-
-		User savedUser = userService.save(user);
-		return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
-	}
-
-	@GetMapping("/userByEmail/{email}")
-	public ResponseEntity<Object> obtainOneByEmail(@PathVariable String email) {
-		User user = userService.findByEmail(email);
-
-		if (user == null) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with email: " + email);
-		}
-
-		UserDTO dto = userDTOConverter.convertToDto(user);
-		return ResponseEntity.ok(dto);
 	}
 }

@@ -31,9 +31,9 @@ public class ProviderController {
 	private final ProviderDTOConverter providerDTOConverter;
 
 	/**
-	 * Obtain all provider
+	 * Retrieve all providers.
 	 *
-	 * @return
+	 * @return List of all provider or a not found message if empty.
 	 */
 
 	@GetMapping("/provider")
@@ -44,11 +44,10 @@ public class ProviderController {
 	}
 
 	/**
-	 * Obtain provider via ID
+	 * Retrieve a single provider by its ID.
 	 *
-	 * @param id
-	 * @return Null if not found
-	 *
+	 * @param id The UUID of the account.
+	 * @return The providerDTO if found, otherwise a not found message.
 	 */
 
 	@GetMapping("/provider/{id}")
@@ -67,10 +66,10 @@ public class ProviderController {
 	}
 
 	/**
-	 * Insert Provider
+	 * Create a new account.
 	 *
-	 * @param New
-	 * @return New Provider inserted
+	 * @param providerData The provider data to create.
+	 * @return The created providerDTO.
 	 */
 
 	@PostMapping("/provider")
@@ -87,11 +86,11 @@ public class ProviderController {
 	}
 
 	/**
-	 * Edit Provider
-	 * 
-	 * @param providerData
-	 * @param id
-	 * @return
+	 * Update an existing account.
+	 *
+	 * @param providerData The updated provider data.
+	 * @param id           The UUID of the provider to update.
+	 * @return The updated providerDTO if found, otherwise a not found message.
 	 */
 
 	@PutMapping("/provider/{id}")
@@ -120,12 +119,10 @@ public class ProviderController {
 	}
 
 	/**
+	 * Delete an provider by its ID.
 	 *
-	 * Delete Provider
-	 *
-	 * @param id
-	 * @return
-	 *
+	 * @param id The UUID of the provider to delete.
+	 * @return No content if deleted, otherwise a not found message.
 	 */
 
 	@DeleteMapping("/provider/{id}")

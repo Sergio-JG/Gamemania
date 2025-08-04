@@ -39,6 +39,12 @@ public class SaleController {
 	private final GameService gameService;
 	private final UserService userService;
 
+	/**
+	 * Retrieve all sales.
+	 *
+	 * @return List of all sales or a not found message if empty.
+	 */
+
 	@GetMapping("/sale")
 	public ResponseEntity<List<SaleDTO>> obtainAll() {
 		List<Sale> result = saleService.findAll();
@@ -49,6 +55,13 @@ public class SaleController {
 		return ResponseEntity.ok(dtoList);
 	}
 
+	/**
+	 * Retrieve a single sale by its ID.
+	 *
+	 * @param id The UUID of the sale.
+	 * @return The sale DTO if found, otherwise a not found message.
+	 */
+
 	@GetMapping("/sale/{id}")
 	public ResponseEntity<SaleDTO> getSaleById(@PathVariable UUID id) {
 		Sale sale = saleService.findById(id);
@@ -56,12 +69,26 @@ public class SaleController {
 		return ResponseEntity.ok(saleDTO);
 	}
 
+	/**
+	 * Retrieve a list of sales by its userID.
+	 *
+	 * @param id The UUID of the user.
+	 * @return The list of sales DTO if found, otherwise a not found message.
+	 */
+
 	@GetMapping("/sale/byUser/{userId}")
 	public ResponseEntity<List<SaleDTO>> getSalesByUserId(@PathVariable UUID userId) {
 		List<Sale> result = saleService.findByUserUserId(userId);
 		List<SaleDTO> dtoList = result.stream().map(saleDTOConverter::convertToDto).toList();
 		return ResponseEntity.ok(dtoList);
 	}
+
+	/**
+	 * Create a new sale.
+	 *
+	 * @param saleData The sale data to create.
+	 * @return The created sale DTO.
+	 */
 
 	@PostMapping("/sale")
 	public ResponseEntity<?> addSale(@RequestBody SaleCreateDTO saleCreateDTO) {
@@ -114,6 +141,13 @@ public class SaleController {
 		SaleDTO createdDTO = saleDTOConverter.convertToDto(savedSale);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdDTO);
 	}
+
+	/**
+	 * Delete a sale by its ID.
+	 *
+	 * @param id The UUID of the sale to delete.
+	 * @return No content if deleted, otherwise a not found message.
+	 */
 
 	@DeleteMapping("/sale/{id}")
 	public ResponseEntity<Object> deleteSale(@PathVariable UUID id) {

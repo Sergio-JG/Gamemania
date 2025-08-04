@@ -35,6 +35,13 @@ public class PurchaseController {
 
 	private final GameService gameService;
 	private final ProviderService providerService;
+
+	/**
+	 * Retrieve all accounts.
+	 *
+	 * @return List of all accounts or a not found message if empty.
+	 */
+
 	@GetMapping("/purchase")
 	public ResponseEntity<List<PurchaseDTO>> obtainAll() {
 		List<Purchase> result = purchaseService.findAll();
@@ -45,12 +52,26 @@ public class PurchaseController {
 		return ResponseEntity.ok(dtoList);
 	}
 
+	/**
+	 * Retrieve a single purchase by its ID.
+	 *
+	 * @param id The UUID of the purchase.
+	 * @return The purchase DTO if found, otherwise a not found message.
+	 */
+
 	@GetMapping("/purchase/{id}")
 	public ResponseEntity<PurchaseDTO> getPurchaseById(@PathVariable UUID id) {
 		Purchase purchase = purchaseService.findById(id);
 		PurchaseDTO purchaseDTO = purchaseDTOConverter.convertToDto(purchase);
 		return ResponseEntity.ok(purchaseDTO);
 	}
+
+	/**
+	 * Create a new purchase.
+	 *
+	 * @param purchaseData The purchase data to create.
+	 * @return The created purchase DTO.
+	 */
 
 	@PostMapping("/purchase")
 	public ResponseEntity<PurchaseDTO> addPurchase(@RequestBody PurchaseDTO purchaseDTO) {
@@ -79,6 +100,13 @@ public class PurchaseController {
 		PurchaseDTO createdPurchaseDTO = purchaseDTOConverter.convertToDto(newPurchase);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdPurchaseDTO);
 	}
+
+	/**
+	 * Delete a purchase by its ID.
+	 *
+	 * @param id The UUID of the purchase to delete.
+	 * @return No content if deleted, otherwise a not found message.
+	 */
 
 	@DeleteMapping("/purchase/{id}")
 	public ResponseEntity<Object> deletePurchase(@PathVariable UUID id) {

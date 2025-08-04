@@ -38,9 +38,9 @@ public class SaleDetailController {
 	private final GameService gameService;
 
 	/**
-	 * Obtenemos todos las ventas
+	 * Retrieve all sales detail.
 	 *
-	 * @return
+	 * @return List of all sales detail or a not found message if empty.
 	 */
 
 	@GetMapping("/saledetail")
@@ -56,11 +56,12 @@ public class SaleDetailController {
 	}
 
 	/**
-	 * Obtenemos un saleo en base a su ID
+	 * Retrieve a single sale detail by its ID.
 	 *
-	 * @param id
-	 * @return Null si no encuentra el saleo
+	 * @param id The UUID of the sale detail.
+	 * @return The sail detail DTO if found, otherwise a not found message.
 	 */
+
 	@GetMapping("/saledetail/{id}")
 	public SaleDetail obtenerUno(@PathVariable UUID id) {
 
@@ -69,11 +70,11 @@ public class SaleDetailController {
 	}
 
 	/**
-	 * Obtenemos un saleo en base a su ID
+	 * Obtain sale details between two dates.
 	 *
-	 * @param startDate La fecha de inicio
-	 * @param endDate   La fecha de fin
-	 * @return Una lista de ventas entre las dos fechas
+	 * @param startDate The start date in string format.
+	 * @param endDate   The end date in string format.
+	 * @return The sale detail DTO.
 	 */
 
 	@GetMapping("/saledetail/betweenDates")
@@ -95,10 +96,10 @@ public class SaleDetailController {
 	}
 
 	/**
-	 * Insertamos un nuevo saleoX
+	 * Create a new sale detail.
 	 *
-	 * @param nuevo
-	 * @return saleo insertado
+	 * @param saleDetailData The sail detail data to create.
+	 * @return The created sale detail DTO.
 	 */
 
 	@PostMapping("/saledetail")
@@ -114,34 +115,30 @@ public class SaleDetailController {
 	}
 
 	/**
+	 * Update an existing sale detail.
 	 *
-	 * @param editar
-	 * @param id
-	 * @return
+	 * @param sailDetailData The updated sail detail data.
+	 * @param id             The UUID of the sale detail to update.
+	 * @return The updated sale detail DTO if found, otherwise a not found message.
 	 */
 
 	@PutMapping("/saledetail/{id}")
 	public SaleDetail editarSaleDetail(@RequestBody SaleDetailDTO editar, @PathVariable UUID id) {
-
 		return saleDetailService.findById(id).map(p -> {
-
 			return saleDetailService.save(p);
 		}).orElseThrow(() -> new NotFoundException(id));
 	}
 
 	/**
+	 * Delete an sale detail by its ID.
 	 *
-	 * Borra un saleo del catálogo en base a su id
-	 *
-	 * @param id
-	 * @return
-	 *
+	 * @param id The UUID of the sale detail to delete.
+	 * @return No content if deleted, otherwise a not found message.
 	 */
 
 	@DeleteMapping("/saledetail/{id}")
 	public ResponseEntity<Object> borrarSaleDetail(@PathVariable UUID id) {
 		SaleDetail sale = saleDetailService.findById(id).orElseThrow(() -> new NotFoundException(id));
-
 		saleDetailService.delete(sale);
 		return ResponseEntity.noContent().build();
 	}

@@ -23,13 +23,13 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 
-public class RoleController  {
+public class RoleController {
 
 	private final RoleRepository roleRepository;
 	// private final RoleDTOConverter roleDTOConverter;
 
 	/**
-	 * Obtenemos todos los roleos
+	 * Obtain all roles
 	 *
 	 * @return
 	 */
@@ -47,10 +47,10 @@ public class RoleController  {
 	}
 
 	/**
-	 * Obtenemos un roleo en base a su ID
+	 * Obtain a role by its id
 	 *
 	 * @param id
-	 * @return Null si no encuentra el roleo
+	 * @return
 	 */
 	@GetMapping("/role/{id}")
 	public Role obtenerUno(@PathVariable UUID id) {
@@ -60,10 +60,10 @@ public class RoleController  {
 	}
 
 	/**
-	 * Insertamos un nuevo roleoX
+	 * Insert a new role
 	 *
 	 * @param nuevo
-	 * @return roleo insertado
+	 * @return
 	 */
 
 	@PostMapping("/role")
@@ -92,7 +92,7 @@ public class RoleController  {
 
 	/**
 	 *
-	 * Borra un roleo del catálogo en base a su id
+	 * Delete a role by its id
 	 *
 	 * @param id
 	 * @return

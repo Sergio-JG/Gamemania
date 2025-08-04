@@ -32,9 +32,9 @@ public class SocialController {
 	private final SocialDTOConverter socialDTOConverter;
 
 	/**
-	 * Obtain all social
+	 * Retrieve all social.
 	 *
-	 * @return
+	 * @return List of all socials or a not found message if empty.
 	 */
 
 	@GetMapping("/social")
@@ -51,11 +51,10 @@ public class SocialController {
 	}
 
 	/**
-	 * Obtain social via ID
+	 * Retrieve a single social by its ID.
 	 *
-	 * @param id
-	 * @return Null if not found
-	 *
+	 * @param id The UUID of the account.
+	 * @return The account DTO if found, otherwise a not found message.
 	 */
 
 	@GetMapping("/social/{id}")
@@ -74,10 +73,10 @@ public class SocialController {
 	}
 
 	/**
-	 * Insert Social
+	 * Create a new social.
 	 *
-	 * @param New
-	 * @return New Social inserted
+	 * @param socialData The social data to create.
+	 * @return The created social DTO.
 	 */
 
 	@PostMapping("/social")
@@ -94,11 +93,11 @@ public class SocialController {
 	}
 
 	/**
-	 * Edit Social
-	 * 
-	 * @param editar
-	 * @param id
-	 * @return
+	 * Update an existing social.
+	 *
+	 * @param socialData The updated social data.
+	 * @param id         The UUID of the social to update.
+	 * @return The updated social DTO if found, otherwise a not found message.
 	 */
 
 	@PutMapping("/social/{id}")
@@ -107,14 +106,10 @@ public class SocialController {
 		Optional<Social> result = socialRepository.findById(id);
 
 		if (result.isEmpty()) {
-
 			NotFoundException exception = new NotFoundException(id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-
 		} else {
-
 			Social newSocial = new Social();
-
 			newSocial.setSocialId(id);
 			newSocial.setDiscordTag(socialData.getDiscordTag());
 			newSocial.setSteamUrl(socialData.getSteamUrl());
@@ -122,17 +117,14 @@ public class SocialController {
 			newSocial.setYoutubeUrl(socialData.getYoutubeUrl());
 
 			return ResponseEntity.ok(socialRepository.save(newSocial));
-
 		}
 	}
 
 	/**
+	 * Delete a social by its ID.
 	 *
-	 * Delete Social
-	 *
-	 * @param id
-	 * @return
-	 *
+	 * @param id The UUID of the social to delete.
+	 * @return No content if deleted, otherwise a not found message.
 	 */
 
 	@DeleteMapping("/social/{id}")
@@ -140,7 +132,6 @@ public class SocialController {
 
 		Social social = socialRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
 		socialRepository.delete(social);
-
 		return ResponseEntity.noContent().build();
 	}
 }

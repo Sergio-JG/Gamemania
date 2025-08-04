@@ -31,9 +31,9 @@ public class PlatformController {
 	private final PlatformDTOConverter platformDTOConverter;
 
 	/**
-	 * Obtain all platform
+	 * Retrieve all platforms.
 	 *
-	 * @return
+	 * @return List of all platforms or a not found message if empty.
 	 */
 
 	@GetMapping("/platform")
@@ -50,11 +50,10 @@ public class PlatformController {
 	}
 
 	/**
-	 * Obtain platform via ID
+	 * Retrieve a single platform by its ID.
 	 *
-	 * @param id
-	 * @return Null if not found
-	 *
+	 * @param id The UUID of the platform.
+	 * @return The platform DTO if found, otherwise a not found message.
 	 */
 
 	@GetMapping("/platform/{id}")
@@ -73,67 +72,52 @@ public class PlatformController {
 	}
 
 	/**
-	 * Insert Platform
+	 * Create a new platform.
 	 *
-	 * @param New
-	 * @return New Platform inserted
+	 * @param platformData The platform data to create.
+	 * @return The created platform DTO.
 	 */
 
 	@PostMapping("/platform")
 	public ResponseEntity<Object> addPlatform(@RequestBody PlatformDTO platformData) {
-
 		Platform newPlatform = new Platform();
-
 		newPlatform.setName(platformData.getName());
-
 		return ResponseEntity.status(HttpStatus.CREATED).body(platformRepository.save(newPlatform));
 	}
 
 	/**
-	 * Edit Platform
-	 * 
-	 * @param platformData
-	 * @param id
-	 * @return
+	 * Update an existing platform.
+	 *
+	 * @param platformData The updated platform data.
+	 * @param id           The UUID of the platform to update.
+	 * @return The updated platform DTO if found, otherwise a not found message.
 	 */
 
 	@PutMapping("/platform/{id}")
 	public ResponseEntity<Object> updatePlatform(@RequestBody PlatformDTO platformData, @PathVariable UUID id) {
-
 		Optional<Platform> result = platformRepository.findById(id);
-
 		if (result.isEmpty()) {
-
 			NotFoundException exception = new NotFoundException(id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-
 		} else {
-
 			Platform newPlatform = new Platform();
-
 			newPlatform.setPlatformId(id);
 			newPlatform.setName(platformData.getName());
-
 			return ResponseEntity.ok(platformRepository.save(newPlatform));
-
 		}
 	}
 
 	/**
+	 * Delete a platform by its ID.
 	 *
-	 * Delete Platform
-	 *
-	 * @param id
-	 * @return
-	 *
+	 * @param id The UUID of the platform to delete.
+	 * @return No content if deleted, otherwise a not found message.
 	 */
 
 	@DeleteMapping("/platform/{id}")
 	public ResponseEntity<Object> deletePlatform(@PathVariable UUID id) {
-
 		Platform platform = platformRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
 		platformRepository.delete(platform);
-
 		return ResponseEntity.noContent().build();
 	}
 }

@@ -32,9 +32,9 @@ public class GameController {
 	private final GameDTOConverter gameDTOConverter;
 
 	/**
-	 * Obtain all game
+	 * Retrieve all games.
 	 *
-	 * @return
+	 * @return List of all games or a not found message if empty.
 	 */
 
 	@GetMapping("/game")
@@ -48,11 +48,10 @@ public class GameController {
 	}
 
 	/**
-	 * Obtain game via ID
+	 * Retrieve a single game by its ID.
 	 *
-	 * @param id
-	 * @return Null if not found
-	 *
+	 * @param id The UUID of the game.
+	 * @return The game DTO if found, otherwise a not found message.
 	 */
 
 	@GetMapping("/game/{id}")
@@ -71,10 +70,10 @@ public class GameController {
 	}
 
 	/**
-	 * Insert Game
+	 * Create a new game.
 	 *
-	 * @param New
-	 * @return New Game inserted
+	 * @param gameData The game data to create.
+	 * @return The created game DTO.
 	 */
 
 	@PostMapping("/game")
@@ -86,11 +85,11 @@ public class GameController {
 	}
 
 	/**
-	 * Edit Game
-	 * 
-	 * @param editar
-	 * @param id
-	 * @return
+	 * Update an existing game.
+	 *
+	 * @param gameData The updated game data.
+	 * @param id       The UUID of the game to update.
+	 * @return The updated game DTO if found, otherwise a not found message.
 	 */
 
 	@PutMapping("/game/{id}")
@@ -122,20 +121,16 @@ public class GameController {
 	}
 
 	/**
+	 * Delete a game by its ID.
 	 *
-	 * Delete Game
-	 *
-	 * @param id
-	 * @return
-	 *
+	 * @param id The UUID of the game to delete.
+	 * @return No content if deleted, otherwise a not found message.
 	 */
 
 	@DeleteMapping("/game/{id}")
 	public ResponseEntity<Object> deleteGame(@PathVariable UUID id) {
-
 		Game game = gameRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
 		gameRepository.delete(game);
-
 		return ResponseEntity.noContent().build();
 	}
 }

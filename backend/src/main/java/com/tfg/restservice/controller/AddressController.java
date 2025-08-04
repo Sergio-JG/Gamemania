@@ -25,8 +25,11 @@ public class AddressController {
 	private final AddressService addressService;
 
 	/**
-	 * Obtener todas las direcciones
+	 * Retrieve all addresses.
+	 *
+	 * @return List of all addresses or a not found message if empty.
 	 */
+
 	@GetMapping("/address")
 	public ResponseEntity<Object> obtainAll() {
 		List<Address> result = addressService.findAll();
@@ -43,8 +46,12 @@ public class AddressController {
 	}
 
 	/**
-	 * Obtener dirección por ID
+	 * Retrieve a single address by its ID.
+	 *
+	 * @param id The UUID of the address.
+	 * @return The address DTO if found, otherwise a not found message.
 	 */
+
 	@GetMapping("/address/{id}")
 	public ResponseEntity<Object> obtainOne(@PathVariable UUID id) {
 		Address address = addressService.findById(id);
@@ -59,8 +66,12 @@ public class AddressController {
 	}
 
 	/**
-	 * Insertar nueva dirección
+	 * Create a new address.
+	 *
+	 * @param accountData The address data to create.
+	 * @return The created address DTO.
 	 */
+
 	@PostMapping("/address")
 	public ResponseEntity<Object> newAddress(@RequestBody AddressDTO addressData) {
 		Address address = addressDTOConverter.convertToEntity(addressData);
@@ -68,8 +79,13 @@ public class AddressController {
 	}
 
 	/**
-	 * Actualizar una dirección completa
+	 * Update an existing address.
+	 *
+	 * @param accountData The updated address data.
+	 * @param id          The UUID of the address to update.
+	 * @return The updated address DTO if found, otherwise a not found message.
 	 */
+
 	@PutMapping("/address/{id}")
 	public ResponseEntity<Object> editAddress(@RequestBody AddressDTO addressData, @PathVariable UUID id)
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -91,8 +107,12 @@ public class AddressController {
 	}
 
 	/**
-	 * Eliminar una dirección por ID
+	 * Delete an address by its ID.
+	 *
+	 * @param id The UUID of the address to delete.
+	 * @return No content if deleted, otherwise a not found message.
 	 */
+
 	@DeleteMapping("/address/{id}")
 	public ResponseEntity<Object> deleteAddress(@PathVariable UUID id) {
 		Address address = addressService.findById(id);
