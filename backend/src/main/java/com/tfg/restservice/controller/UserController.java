@@ -39,7 +39,7 @@ public class UserController {
 	 *
 	 * @return List of all users or a not found message if empty.
 	 */
-ç
+
 	@GetMapping("/user")
 	public ResponseEntity<Object> obtainAll() {
 		List<User> result = userService.findAll();
