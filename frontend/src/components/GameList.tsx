@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Game } from '../interfaces/GameInterface';
 import { Chip, CircularProgress } from '@mui/material';
 import axios from 'axios';
+import FakeGameList from './FakeGameList';
 
 const GameList = () => {
   const [games, setGames] = useState<Game[]>([]);
@@ -108,15 +109,18 @@ const GameList = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center border border-yellow-50 rounded-lg p-8 w-full h-full">
-        <Typography
-          className="mt-4 text-lg font-semibold text-white"
-          fontFamily="Roboto"
-        >
-          Cargando juegos... <span className="text-gray-400 text-base">(la instancia es gratis)</span>
-        </Typography>
-        <CircularProgress className="ms-2" color="primary" />
-      </div>
+      <>
+        <FakeGameList />
+        <div className="flex items-center justify-center border border-yellow-50 rounded-lg p-8 w-full h-full">
+          <Typography
+            className="mt-4 text-lg font-semibold text-white"
+            fontFamily="Roboto"
+          >
+            Cargando juegos... <span className="text-gray-400 text-base">(la instancia es gratis)</span>
+          </Typography>
+          <CircularProgress className="ms-2" color="primary" />
+        </div>
+      </>
     );
   }
 

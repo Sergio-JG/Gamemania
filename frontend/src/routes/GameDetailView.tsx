@@ -45,20 +45,29 @@ const GameDetail = () => {
 
   const location = useLocation();
   const { gameId } = location.state || {};
+  const { fakegames } = location.state || {};
   const [game, setGame] = useState<Game>();
 
   useEffect(() => {
-    const fetchGameDetails = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/game/${gameId}`);
-        setGame(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error('Error fetching game details:', error);
+    if (fakegames) {
+      for (const fg of fakegames) {
+        if (fg.gameId === gameId) {
+          setGame(fg);
+        }
       }
-    };
-    fetchGameDetails();
-  }, [gameId]);
+    } else {
+      const fetchGameDetails = async () => {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/game/${gameId}`);
+          setGame(response.data);
+          console.log(response.data);
+        } catch (error) {
+          console.error('Error fetching game details:', error);
+        }
+      };
+      fetchGameDetails();
+    }
+  }, [gameId, fakegames]);
 
   return (
     <>
